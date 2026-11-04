@@ -18,24 +18,24 @@ img{max-width:100%}
 /* Layout: opsætning i venstre kolonne, lodtrækningstavle med resultat og kampprogram til højre; én kolonne på mobil.
    Det ene dristige element er den mørke tavle (som et stadionskilt) der viser hvert trukket hold. */
 :root{
-  --bg:#F2F5F8; --surface:#FFFFFF; --surface-2:#E6ECF1; --fg:#14202B; --muted:#566878; --line:#D2DBE4;
-  --accent:#0A6C6C; --accent-fg:#FFFFFF; --danger:#B42318;
-  --board:#0D1822; --board-fg:#EEF3F7; --board-dim:#7F93A5; --signal:#FF8A3D; --signal-soft:#FFE8D6;
+  --bg:#FAF6EE; --surface:#FFFFFF; --surface-2:#F1E9D8; --fg:#1A1210; --muted:#6B5A52; --line:#E3D8C4;
+  --accent:#B80F2A; --accent-fg:#FFFFFF; --danger:#8A1C1C;
+  --board:#140B0B; --board-fg:#F6EEE6; --board-dim:#A8978D; --signal:#F2B705; --signal-soft:#FFF1BF;
   --font-display:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
   --font-body:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --radius:6px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0C131A; --surface:#141E28; --surface-2:#1C2935; --fg:#E7EEF4; --muted:#93A5B6; --line:#273746;
-    --accent:#45BDB4; --accent-fg:#04201E; --danger:#FF8F85;
-    --board:#060B10; --signal-soft:#3A2616; color-scheme:dark;
+    --bg:#110A0A; --surface:#1B1212; --surface-2:#271A1A; --fg:#F6EEE6; --muted:#B3A096; --line:#3A2A2A;
+    --accent:#F2B705; --accent-fg:#1A1210; --danger:#FF8F85;
+    --board:#080404; --signal-soft:#3A2E0A; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0C131A; --surface:#141E28; --surface-2:#1C2935; --fg:#E7EEF4; --muted:#93A5B6; --line:#273746;
-  --accent:#45BDB4; --accent-fg:#04201E; --danger:#FF8F85;
-  --board:#060B10; --signal-soft:#3A2616; color-scheme:dark;
+  --bg:#110A0A; --surface:#1B1212; --surface-2:#271A1A; --fg:#F6EEE6; --muted:#B3A096; --line:#3A2A2A;
+  --accent:#F2B705; --accent-fg:#1A1210; --danger:#FF8F85;
+  --board:#080404; --signal-soft:#3A2E0A; color-scheme:dark;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.5}
@@ -153,7 +153,7 @@ a.btn{display:block;text-align:center;text-decoration:none}
   .pp{break-after:page;page-break-after:always;font-family:var(--font-body)}
   .pp:last-child{break-after:auto;page-break-after:auto}
   .pp h1{margin:0;font:700 20pt/1.1 var(--font-display);color:#000}
-  .pp h2{margin:2pt 0 0;font:700 16pt/1.1 var(--font-display);color:#0A6C6C}
+  .pp h2{margin:2pt 0 0;font:700 16pt/1.1 var(--font-display);color:#B80F2A}
   .pp .pmeta{margin:2pt 0 10pt;font-size:10pt;color:#444}
   .pp table{width:100%;border-collapse:collapse;font-size:11pt}
   .pp th{padding:3pt 4pt;text-align:left;font:600 8pt var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:#444;border-bottom:1.5pt solid #000}
@@ -1053,7 +1053,7 @@ function ensureAllDrawn(){
   if(run){ S.draw=run.draw; S.revealed=run.revealed; }
 }
 /* ---------- formateret kopi (HTML-tabel, som indsættes pænt i Excel og Word) ---------- */
-const XL={teal:'#0A6C6C',muted:'#566878',line:'#C9D3DC',bg:'#F2F5F8'};
+const XL={teal:'#B80F2A',muted:'#6B5A52',line:'#E3D8C4',bg:'#FAF6EE'};
 const XL_BOX='border:1px solid '+XL.line+';background:'+XL.bg+';padding:4px 10px;';
 function xlTable(cols,rows){
   return '<table style="border-collapse:collapse;font-family:Calibri,Arial,sans-serif;font-size:11pt"><colgroup>'+
