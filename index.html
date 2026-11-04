@@ -46,6 +46,7 @@ html:not(.isdraw) .app{max-width:calc(40rem + 2*16px)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 .top{margin-bottom:1.25rem}
+.brand{display:block;width:64px;height:64px;margin-bottom:.7rem}
 h1{margin:0;font:700 clamp(2rem,5vw,2.8rem)/1.05 var(--font-display);letter-spacing:.01em;text-wrap:balance}
 .top p{margin:.4rem 0 0;color:var(--muted);max-width:60ch}
 #evSub{margin:.6rem 0 0;color:var(--muted);max-width:60ch}
@@ -302,17 +303,18 @@ li.empty{margin:0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0d1620">
+<meta name="theme-color" content="#140b0b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Lodtrækning">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
 </head>
 <body>
 
 <div class="app">
   <header class="top">
+    <img class="brand" alt="" width="64" height="64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzE0MGIwYiIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTk2IiBmaWxsPSIjYzgxMDJlIiBzdHJva2U9IiNmMmI3MDUiIHN0cm9rZS13aWR0aD0iMjIiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE2NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTQwYjBiIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1kYXNoYXJyYXk9IjIgMTYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YyYjcwNSIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTEyIDE2OEgxNjhWMjQwSDIxMiIvPjxwYXRoIGQ9Ik0xMTIgMzQ0SDE2OFYyNzJIMjEyIi8+PC9nPjxjaXJjbGUgY3g9IjMxOCIgY3k9IjI1NiIgcj0iNzYiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzE0MGIwYiIgc3Ryb2tlLXdpZHRoPSI1LjMiLz48cG9seWdvbiBwb2ludHM9IjMxOC4wLDIyNC4xIDM0OC40LDI0Ni4xIDMzNi44LDI4MS44IDI5OS4yLDI4MS44IDI4Ny42LDI0Ni4xIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjMxOC4wIiB5MT0iMjI0LjEiIHgyPSIzMTguMCIgeTI9IjE5Ni43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjMxOC4wLDE5Ni43IDMwMy41LDE4Ni4yIDMwOS4xLDE2OS4yIDMyNi45LDE2OS4yIDMzMi41LDE4Ni4yIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjM0OC40IiB5MT0iMjQ2LjEiIHgyPSIzNzQuNCIgeTI9IjIzNy43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM3NC40LDIzNy43IDM3OS45LDIyMC43IDM5Ny44LDIyMC43IDQwMy4zLDIzNy43IDM4OC44LDI0OC4yIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjMzNi44IiB5MT0iMjgxLjgiIHgyPSIzNTIuOCIgeTI9IjMwNC4wIiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM1Mi44LDMwNC4wIDM3MC43LDMwNC4wIDM3Ni4yLDMyMS4wIDM2MS44LDMzMS41IDM0Ny4zLDMyMS4wIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjI5OS4yIiB5MT0iMjgxLjgiIHgyPSIyODMuMiIgeTI9IjMwNC4wIiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjI4My4yLDMwNC4wIDI4OC43LDMyMS4wIDI3NC4yLDMzMS41IDI1OS44LDMyMS4wIDI2NS4zLDMwNC4wIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjI4Ny42IiB5MT0iMjQ2LjEiIHgyPSIyNjEuNiIgeTI9IjIzNy43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjI2MS42LDIzNy43IDI0Ny4yLDI0OC4yIDIzMi43LDIzNy43IDIzOC4yLDIyMC43IDI1Ni4xLDIyMC43IiBmaWxsPSIjMTQwYjBiIi8+PC9zdmc+">
     <h1 id="evTitle" hidden></h1>
     <div id="evEdit">
       <input id="evTitleIn" class="title-in" type="text" maxlength="80" placeholder="Klubbens turnering, fx Ravnene Cup 2026" aria-label="Turneringens navn, vises øverst">
