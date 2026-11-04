@@ -18,24 +18,24 @@ img{max-width:100%}
 /* Layout: opsætning i venstre kolonne, lodtrækningstavle med resultat og kampprogram til højre; én kolonne på mobil.
    Det ene dristige element er den mørke tavle (som et stadionskilt) der viser hvert trukket hold. */
 :root{
-  --bg:#FAF6EE; --surface:#FFFFFF; --surface-2:#F1E9D8; --fg:#1A1210; --muted:#6B5A52; --line:#E3D8C4;
-  --accent:#B80F2A; --accent-fg:#FFFFFF; --danger:#8A1C1C;
-  --board:#140B0B; --board-fg:#F6EEE6; --board-dim:#A8978D; --signal:#F2B705; --signal-soft:#FFF1BF;
+  --bg:#F5F5F4; --surface:#FFFFFF; --surface-2:#EBEBE9; --fg:#1C1917; --muted:#6B6762; --line:#DEDCD8;
+  --accent:#1F2937; --accent-fg:#FFFFFF; --danger:#B42318;
+  --board:#1C1917; --board-fg:#F6F4F1; --board-dim:#A5A29D; --signal:#F2B705; --signal-soft:#FFF1BF; --brand:#B80F2A;
   --font-display:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
   --font-body:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --radius:6px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#110A0A; --surface:#1B1212; --surface-2:#271A1A; --fg:#F6EEE6; --muted:#B3A096; --line:#3A2A2A;
-    --accent:#F2B705; --accent-fg:#1A1210; --danger:#FF8F85;
-    --board:#080404; --signal-soft:#3A2E0A; color-scheme:dark;
+    --bg:#141414; --surface:#1D1D1D; --surface-2:#282828; --fg:#F3F3F2; --muted:#A5A29D; --line:#363636;
+    --accent:#F2B705; --accent-fg:#141414; --danger:#FF8F85;
+    --board:#0A0A0A; --signal-soft:#3A2E0A; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#110A0A; --surface:#1B1212; --surface-2:#271A1A; --fg:#F6EEE6; --muted:#B3A096; --line:#3A2A2A;
-  --accent:#F2B705; --accent-fg:#1A1210; --danger:#FF8F85;
-  --board:#080404; --signal-soft:#3A2E0A; color-scheme:dark;
+  --bg:#141414; --surface:#1D1D1D; --surface-2:#282828; --fg:#F3F3F2; --muted:#A5A29D; --line:#363636;
+  --accent:#F2B705; --accent-fg:#141414; --danger:#FF8F85;
+  --board:#0A0A0A; --signal-soft:#3A2E0A; color-scheme:dark;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.5}
@@ -46,6 +46,12 @@ html:not(.isdraw) .app{max-width:calc(40rem + 2*16px)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 .top{margin-bottom:1.25rem}
+body{border-top:6px solid var(--brand,#B80F2A)}
+.durf{grid-column:1/-1}
+.lbl2{display:block;font-size:.88rem;margin-bottom:.35rem}
+.durrow{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin:0 0 .4rem}
+.durrow span{flex:1}
+.durrow input{width:6rem!important;flex:none}
 .brand{display:block;width:64px;height:64px;margin-bottom:.7rem}
 h1{margin:0;font:700 clamp(2rem,5vw,2.8rem)/1.05 var(--font-display);letter-spacing:.01em;text-wrap:balance}
 .top p{margin:.4rem 0 0;color:var(--muted);max-width:60ch}
@@ -72,6 +78,11 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .cat.prog{margin-left:auto}
 .glob{border-top:1px solid var(--line);padding-top:1.1rem}
 .glob .hint{margin:0 0 .7rem}
+.gtoggle{display:flex;align-items:center;gap:.5rem;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;text-align:left}
+.gchev{transition:transform .15s;font-size:1.1em}
+.closed .gchev{transform:rotate(-90deg)}
+.glob.closed #globBody,.coll.closed #matchBody{display:none}
+.glob legend,.coll legend{width:100%}
 .glob .field{margin-top:.7rem}
 .pfilter{margin-bottom:.6rem}
 .cat[disabled]{opacity:.4;cursor:not-allowed}
@@ -303,7 +314,7 @@ li.empty{margin:0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#140b0b">
+<meta name="theme-color" content="#b80f2a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Lodtrækning">
@@ -394,21 +405,24 @@ li.empty{margin:0}
 
 
 
-      <fieldset>
-        <legend class="lbl">Kampe i kategorien</legend>
+      <fieldset class="coll" id="matchFs">
+        <legend class="lbl"><button type="button" id="matchToggle" class="gtoggle" aria-expanded="true" aria-controls="matchBody"><span>Kampe i kategorien</span><span class="gchev" aria-hidden="true">▾</span></button></legend>
+        <div id="matchBody">
         <label class="check" data-for="group league"><input type="checkbox" id="dbl"><span>Dobbelt runde<small>Alle møder hinanden to gange.</small></span></label>
-        <div class="field"><label for="dur">Kamplængde (min.)</label><input id="dur" type="number" min="1" max="240" value="15" inputmode="numeric"></div>
         <div class="field"><label for="only">Spiller kun på bane (valgfri)</label><input id="only" type="text" maxlength="30" placeholder="fx 3, 1,3, 2-3 eller et banenavn" autocomplete="off"><p class="hint" id="onlyHint"></p></div>
         <label class="check"><input type="checkbox" id="early"><span>Spilles tidligt (under 16 år)<small>Kampene får forrang tidligt på dagen, men blandes med de andre kategorier. U12 og U15 er sat til automatisk.</small></span></label>
+        </div>
       </fieldset>
 
       <fieldset class="glob">
-        <legend class="lbl">Fælles kampprogram</legend>
+        <legend class="lbl"><button type="button" id="globToggle" class="gtoggle" aria-expanded="true" aria-controls="globBody"><span>Fælles kampprogram</span><span class="gchev" aria-hidden="true">▾</span></button></legend>
+        <div id="globBody">
         <p class="hint">Alle kategorier deler banerne, så tiderne lægges sammen automatisk.</p>
         <div class="grid2">
           <div class="field"><label for="date">Dato (valgfri)</label><input id="date" type="date"></div>
           <div class="field"><label for="start">Første kamp</label><input id="start" type="time" value="09:00"></div>
           <div class="field"><label for="pitches">Baner</label><input id="pitches" type="number" min="1" max="16" value="2" inputmode="numeric"></div>
+          <div class="field durf"><span class="lbl2">Kamplængde (min.) for hver kategori</span><div id="durList"></div></div>
           <div class="field"><label for="pause">Pause på banen (min.)</label><input id="pause" type="number" min="0" max="120" value="5" inputmode="numeric"></div>
           <div class="field"><label for="rest">Hold hviler mindst (min.)</label><input id="rest" type="number" min="0" max="240" value="10" inputmode="numeric"></div>
         </div>
@@ -423,12 +437,12 @@ li.empty{margin:0}
         </div>
         <p class="hint">Hjemmeklubbens hold spiller alle deres kampe på hjemmebanen, uanset kategori. Klubben skrives efter semikolon på holdlisterne.</p>
         <label class="check"><input type="checkbox" id="homeOnly"><span>Reservér hjemmebanen<small>Andre klubbers kampe bruger så ikke hjemmebanen.</small></span></label>
+        </div>
       </fieldset>
 
       <p class="msg" id="msg" role="status"></p>
       <div>
-        <a class="btn primary wide" id="bStart" href="#lodtraekning" target="_blank" rel="noopener">Åbn lodtrækning i ny fane</a>
-        <p class="sub">Lodtrækningen får sin egen side, så den kan vises på en skærm. <a class="link" id="bSame" href="#lodtraekning">Åbn i samme fane</a></p>
+        <a class="btn primary wide" id="bStart" href="#lodtraekning">Åbn lodtrækning</a>
       </div>
     </form>
 
@@ -813,7 +827,7 @@ const clubAllowed=(k,catName)=>!k.womenOnly||isWomenCat(catName);
 const lgImg=(k,cls)=>k&&k.logo?'<img class="'+(cls||'lg')+'" src="'+k.logo+'" alt="">':'';
 const tlc=(clubs,team)=>lgImg(clubs&&clubs[team]?clubOf(clubs[team]):null)+esc(team);
 const HEAD0={title:'Turneringslodtrækning'};
-const S={head:Object.assign({},HEAD0),cats:[],cur:0,glob:{start:'09:00',pitches:'2',pnames:'',pause:'5',rest:'10',order:'mix',home:'',homePitch:'1',homeOnly:false,date:''},filter:'all',pfilter:'all',draw:null,revealed:0,last:-1,busy:false,token:0,ready:false,sig:'',tab:'draw',programText:'',runs:{},mans:{}};
+const S={head:Object.assign({},HEAD0),cats:[],cur:0,glob:{start:'09:00',dur:'15',pitches:'2',pnames:'',pause:'5',rest:'10',order:'mix',home:'',homePitch:'1',homeOnly:false,date:''},filter:'all',pfilter:'all',draw:null,revealed:0,last:-1,busy:false,token:0,ready:false,sig:'',tab:'draw',programText:'',runs:{},mans:{}};
 
 const uid=()=>'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 // Kategorier som U12 og U15 (under 16 år) spilles som standard tidligt på dagen
@@ -869,14 +883,14 @@ function storeForm(){
   const c=cur();
   c.teams=$('#teams').value; c.groups=$('#groups').value; c.pots=$('#pots').checked; c.lp=$('#lp').checked; c.lpn=$('#lpn').value; c.avoid=true;
   ensureSlots(c);
-  c.dbl=$('#dbl').checked; c.dur=$('#dur').value; c.name=$('#catName').value; c.early=$('#early').checked; c.only=$('#only').value;
+  c.dbl=$('#dbl').checked; c.name=$('#catName').value; c.early=$('#early').checked; c.only=$('#only').value;
   S.glob={start:$('#start').value,pitches:$('#pitches').value,pnames:$('#pnames').value,pause:$('#pause').value,rest:$('#rest').value,order:$('#order').value,
     home:$('#home').value,homePitch:$('#homePitch').value,homeOnly:$('#homeOnly').checked,date:$('#date').value};
 }
 function loadForm(){
   S.slot=null; const c=cur();
   $('#teams').value=c.teams; ensureSlots(c); syncCounts(c); $('#pots').checked=!!c.pots; $('#lp').checked=!!c.lp;
-  $('#dbl').checked=!!c.dbl; $('#dur').value=c.dur; $('#catName').value=c.name; $('#early').checked=!!c.early; $('#only').value=c.only||'';
+  $('#dbl').checked=!!c.dbl; $('#catName').value=c.name; $('#early').checked=!!c.early; $('#only').value=c.only||'';
   const g=S.glob; $('#start').value=g.start; $('#pitches').value=g.pitches; $('#pnames').value=g.pnames||''; $('#pause').value=g.pause; $('#rest').value=g.rest; $('#order').value=g.order;
   $('#home').value=g.home; $('#homePitch').value=g.homePitch; $('#homeOnly').checked=!!g.homeOnly; $('#date').value=g.date||'';
 }
@@ -1471,8 +1485,18 @@ function syncCounts(c){
   fillCount($('#groups'),$('#grpHint'),c,'groups',N,3);
   fillCount($('#lpn'),$('#lpnHint'),c,'lpn',N,4);
 }
+function renderDurs(){
+  const box=$('#durList'), sig=S.cats.map(c=>c.id+'|'+catLabel(c)).join('\n');
+  if(box.dataset.sig!==sig){
+    box.dataset.sig=sig;
+    box.innerHTML=S.cats.map(c=>'<div class="durrow"><span>'+esc(catLabel(c))+'</span><input type="number" min="1" max="240" inputmode="numeric" aria-label="Kamplængde for '+esc(catLabel(c))+'" data-dur="'+c.id+'" value="'+esc(String(c.dur||'15'))+'"></div>').join('');
+  } else {
+    box.querySelectorAll('[data-dur]').forEach(i=>{ const c=S.cats.find(x=>x.id===i.dataset.dur); if(c&&document.activeElement!==i) i.value=c.dur||'15'; });
+  }
+}
 function syncUI(){
   S.cats.forEach(ensureSlots);
+  renderDurs();
   syncCounts(cur());
   const c=cur(), r=catCfg(c), f=c.format, sm=slotModeOf(c);
   $('#teamsField').hidden=true; $('#clubPick').hidden=true;
@@ -1489,7 +1513,7 @@ function syncUI(){
   $('#potHint').textContent='Skriv de stærkeste hold først. Pulje 1 er hold 1–'+G+', pulje 2 er hold '+(G+1)+'–'+(2*G)+', og så videre. Hver gruppe får ét hold fra hver pulje.';
   $('#msg').textContent=r.errors.length?(S.cats.length>1?catLabel(c)+': ':'')+r.errors.join(' '):'';
   const anyOk=S.cats.some(x=>catCfg(x).errors.length===0);
-  ['#bStart','#bSame'].forEach(id=>{ const a=$(id); a.setAttribute('aria-disabled',anyOk?'false':'true'); a.tabIndex=anyOk?0:-1; });
+  { const a=$('#bStart'); a.setAttribute('aria-disabled',anyOk?'false':'true'); a.tabIndex=anyOk?0:-1; }
   $('#bDel').hidden=S.cats.length<2;
   { const pp=parsePitches(c.only,pitchCount(),pnames()), hint=$('#onlyHint');
     if(pp.bad.length) hint.textContent=pp.bad.join(', ')+' findes ikke. Der er '+pitchCount()+(pitchCount()===1?' bane':' baner')+' (se Fælles kampprogram).';
@@ -1810,12 +1834,21 @@ S.ready=restore();
 $('#evTitleIn').value=S.head.title;
 loadForm();
 $('#setup').addEventListener('submit',e=>{ e.preventDefault(); });
+$('#durList').addEventListener('input',e=>{ const i=e.target.closest('[data-dur]'); if(!i) return; const c=S.cats.find(x=>x.id===i.dataset.dur); if(c) c.dur=i.value; });
+function collapsible(fs,btn,key){
+  const f=$(fs), t=$(btn);
+  const set=open=>{ f.classList.toggle('closed',!open); t.setAttribute('aria-expanded',String(open)); try{ localStorage.setItem(KEY+':'+key,open?'1':'0'); }catch(e){} };
+  t.addEventListener('click',()=>set(f.classList.contains('closed')));
+  try{ if(localStorage.getItem(KEY+':'+key)==='0') set(false); }catch(e){}
+}
+collapsible('.glob','#globToggle','globopen');
+collapsible('#matchFs','#matchToggle','matchopen');
 $('#setup').addEventListener('input',onChange);
-['#bStart','#bSame'].forEach(id=>$(id).addEventListener('click',e=>{
+$('#bStart').addEventListener('click',e=>{
   storeForm();
   if(!S.cats.some(c=>catCfg(c).errors.length===0)){ e.preventDefault(); syncUI(); return; }
   S.ready=true; save();
-}));
+});
 $('#evTitleIn').addEventListener('input',()=>{ S.head={title:$('#evTitleIn').value}; save(); });
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{ cur().format=b.dataset.f; onChange(); }));
