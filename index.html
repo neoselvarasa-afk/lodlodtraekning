@@ -47,16 +47,31 @@ html:not(.isdraw) .app{max-width:calc(40rem + 2*16px)}
 
 .top{margin-bottom:1.25rem}
 body{border-top:6px solid var(--brand,#B80F2A)}
+.top{position:relative}
+.instbox{position:absolute;top:0;right:0;display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;max-width:min(260px,60%);z-index:2}
+.instbox .hint{margin:0;text-align:right;font-size:.8rem}
+.logorow{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.5rem}
+.logorow .btn{cursor:pointer}
+.logorow .hint{margin:0}
+.titlerow{display:flex;align-items:center;gap:.8rem}
+.titlerow>input,.titlerow>h1{flex:1;min-width:0}
+.clubimg{flex:none;height:clamp(64px,12vw,104px);width:auto;max-width:clamp(90px,20vw,190px);object-fit:contain}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .clubimg{filter:drop-shadow(0 0 1.5px rgba(255,255,255,.7))}}
+.logopick{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.4rem;margin-top:.6rem;padding:.6rem;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.logopick button{display:flex;align-items:center;gap:.5rem;padding:.35rem .5rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:600 .8rem var(--font-body);text-align:left;cursor:pointer}
+.logopick button:hover,.logopick button:focus-visible{border-color:var(--accent)}
+.logopick img{width:28px;height:28px;object-fit:contain;flex:none;border-radius:4px;background:#fff}
+.pplogo{display:block;height:34pt;width:auto;margin:0 0 4pt}
 .durf{grid-column:1/-1}
 .lbl2{display:block;font-size:.88rem;margin-bottom:.35rem}
 .durrow{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin:0 0 .4rem}
 .durrow span{flex:1}
 .durrow input{width:6rem!important;flex:none}
-.brand{display:block;width:64px;height:64px;margin-bottom:.7rem}
-h1{margin:0;font:700 clamp(2rem,5vw,2.8rem)/1.05 var(--font-display);letter-spacing:.01em;text-wrap:balance}
+.brand{display:block;width:64px;height:64px;margin-bottom:.7rem;background:transparent;border-radius:0}
+h1{margin:0;font:700 clamp(2.4rem,6.5vw,3.8rem)/1.05 var(--font-display);letter-spacing:.01em;text-wrap:balance}
 .top p{margin:.4rem 0 0;color:var(--muted);max-width:60ch}
 #evSub{margin:.6rem 0 0;color:var(--muted);max-width:60ch}
-#evEdit .title-in{display:block;width:100%;font:700 clamp(2rem,5vw,2.8rem)/1.1 var(--font-display);letter-spacing:.01em;color:var(--fg);background:transparent;border:0;border-bottom:2px dashed var(--line);border-radius:0;padding:0 0 .2rem}
+#evEdit .title-in{display:block;width:100%;font:700 clamp(1.8rem,5.5vw,3rem)/1.1 var(--font-display);letter-spacing:.01em;color:var(--fg);background:transparent;border:0;border-bottom:2px dashed var(--line);border-radius:0;padding:0 0 .2rem}
 #evEdit .title-in:focus{outline:0;border-bottom-color:var(--accent)}
 .title-in::placeholder{color:var(--muted);opacity:.7}
 #evEdit .hint{margin:.5rem 0 0}
@@ -325,11 +340,20 @@ li.empty{margin:0}
 
 <div class="app">
   <header class="top">
-    <img class="brand" alt="" width="64" height="64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzE0MGIwYiIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTk2IiBmaWxsPSIjYzgxMDJlIiBzdHJva2U9IiNmMmI3MDUiIHN0cm9rZS13aWR0aD0iMjIiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE2NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTQwYjBiIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1kYXNoYXJyYXk9IjIgMTYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YyYjcwNSIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTEyIDE2OEgxNjhWMjQwSDIxMiIvPjxwYXRoIGQ9Ik0xMTIgMzQ0SDE2OFYyNzJIMjEyIi8+PC9nPjxjaXJjbGUgY3g9IjMxOCIgY3k9IjI1NiIgcj0iNzYiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzE0MGIwYiIgc3Ryb2tlLXdpZHRoPSI1LjMiLz48cG9seWdvbiBwb2ludHM9IjMxOC4wLDIyNC4xIDM0OC40LDI0Ni4xIDMzNi44LDI4MS44IDI5OS4yLDI4MS44IDI4Ny42LDI0Ni4xIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjMxOC4wIiB5MT0iMjI0LjEiIHgyPSIzMTguMCIgeTI9IjE5Ni43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjMxOC4wLDE5Ni43IDMwMy41LDE4Ni4yIDMwOS4xLDE2OS4yIDMyNi45LDE2OS4yIDMzMi41LDE4Ni4yIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjM0OC40IiB5MT0iMjQ2LjEiIHgyPSIzNzQuNCIgeTI9IjIzNy43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM3NC40LDIzNy43IDM3OS45LDIyMC43IDM5Ny44LDIyMC43IDQwMy4zLDIzNy43IDM4OC44LDI0OC4yIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjMzNi44IiB5MT0iMjgxLjgiIHgyPSIzNTIuOCIgeTI9IjMwNC4wIiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM1Mi44LDMwNC4wIDM3MC43LDMwNC4wIDM3Ni4yLDMyMS4wIDM2MS44LDMzMS41IDM0Ny4zLDMyMS4wIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjI5OS4yIiB5MT0iMjgxLjgiIHgyPSIyODMuMiIgeTI9IjMwNC4wIiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjI4My4yLDMwNC4wIDI4OC43LDMyMS4wIDI3NC4yLDMzMS41IDI1OS44LDMyMS4wIDI2NS4zLDMwNC4wIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjI4Ny42IiB5MT0iMjQ2LjEiIHgyPSIyNjEuNiIgeTI9IjIzNy43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjI2MS42LDIzNy43IDI0Ny4yLDI0OC4yIDIzMi43LDIzNy43IDIzOC4yLDIyMC43IDI1Ni4xLDIyMC43IiBmaWxsPSIjMTQwYjBiIi8+PC9zdmc+">
-    <h1 id="evTitle" hidden></h1>
+    <div class="instbox" id="instBox" hidden><button type="button" class="btn ghost small" id="bInstall">Installer app</button><p class="hint" id="instHint" hidden></p></div>
+    <img class="brand" id="brandImg" alt="" width="64" height="64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjQwIDQwIDQzMiA0MzIiPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTk2IiBmaWxsPSIjYzgxMDJlIiBzdHJva2U9IiNmMmI3MDUiIHN0cm9rZS13aWR0aD0iMjIiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE2NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTQwYjBiIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1kYXNoYXJyYXk9IjIgMTYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YyYjcwNSIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTEyIDE2OEgxNjhWMjQwSDIxMiIvPjxwYXRoIGQ9Ik0xMTIgMzQ0SDE2OFYyNzJIMjEyIi8+PC9nPjxjaXJjbGUgY3g9IjMxOCIgY3k9IjI1NiIgcj0iNzYiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzE0MGIwYiIgc3Ryb2tlLXdpZHRoPSI1LjMiLz48cG9seWdvbiBwb2ludHM9IjMxOC4wLDIyNC4xIDM0OC40LDI0Ni4xIDMzNi44LDI4MS44IDI5OS4yLDI4MS44IDI4Ny42LDI0Ni4xIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjMxOC4wIiB5MT0iMjI0LjEiIHgyPSIzMTguMCIgeTI9IjE5Ni43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjMxOC4wLDE5Ni43IDMwMy41LDE4Ni4yIDMwOS4xLDE2OS4yIDMyNi45LDE2OS4yIDMzMi41LDE4Ni4yIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjM0OC40IiB5MT0iMjQ2LjEiIHgyPSIzNzQuNCIgeTI9IjIzNy43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM3NC40LDIzNy43IDM3OS45LDIyMC43IDM5Ny44LDIyMC43IDQwMy4zLDIzNy43IDM4OC44LDI0OC4yIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjMzNi44IiB5MT0iMjgxLjgiIHgyPSIzNTIuOCIgeTI9IjMwNC4wIiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM1Mi44LDMwNC4wIDM3MC43LDMwNC4wIDM3Ni4yLDMyMS4wIDM2MS44LDMzMS41IDM0Ny4zLDMyMS4wIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjI5OS4yIiB5MT0iMjgxLjgiIHgyPSIyODMuMiIgeTI9IjMwNC4wIiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjI4My4yLDMwNC4wIDI4OC43LDMyMS4wIDI3NC4yLDMzMS41IDI1OS44LDMyMS4wIDI2NS4zLDMwNC4wIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjI4Ny42IiB5MT0iMjQ2LjEiIHgyPSIyNjEuNiIgeTI9IjIzNy43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjI2MS42LDIzNy43IDI0Ny4yLDI0OC4yIDIzMi43LDIzNy43IDIzOC4yLDIyMC43IDI1Ni4xLDIyMC43IiBmaWxsPSIjMTQwYjBiIi8+PC9zdmc+">
+    <div class="titlerow" id="evTitleRow" hidden><img class="clubimg" id="clubImgH" alt="" hidden><h1 id="evTitle"></h1></div>
     <div id="evEdit">
-      <input id="evTitleIn" class="title-in" type="text" maxlength="80" placeholder="Klubbens turnering, fx Ravnene Cup 2026" aria-label="Turneringens navn, vises øverst">
+      <div class="titlerow"><img class="clubimg" id="clubImgE" alt="" hidden><input id="evTitleIn" class="title-in" type="text" maxlength="80" placeholder="Klubbens turnering, fx Ravnene Cup 2026" aria-label="Turneringens navn, vises øverst"></div>
       <p class="hint">Skriv klubbens og turneringens navn her.</p>
+      <div class="logorow">
+        <button type="button" class="btn ghost small" id="logoPickBtn" aria-expanded="false" aria-controls="logoPick">Vælg klub</button>
+        <label class="btn ghost small" for="logoFile">Upload logo</label>
+        <input type="file" id="logoFile" accept="image/*" hidden>
+        <button type="button" class="btn ghost small" id="logoDel" hidden>Fjern logo</button>
+        <span class="hint" id="logoMsg" role="status"></span>
+      </div>
+      <div id="logoPick" class="logopick" hidden></div>
     </div>
     <p id="evSub">Træk hold til grupper, liga eller slutspil, og få kampprogrammet med tidspunkter og baner.</p>
   </header>
@@ -1226,7 +1250,7 @@ function printSection(title,sub,list,showPitch){
   const rows=list.map(m=>'<tr><td class="c-no">'+m.gno+'</td><td class="c-time">'+fmt(m.start)+'</td>'+(showPitch?'<td class="c-pitch">'+esc(pitchName(m.pitch-1))+'</td>':'')+
     '<td class="c-home">'+(m.aPh?esc(m.a):tlcR(m.cat.clubs,m.a))+'</td><td class="c-vs">–</td><td class="c-away">'+(m.bPh?esc(m.b):tlc(m.cat.clubs,m.b))+'</td>'+
     '<td class="c-tag">'+esc(tagOf(m))+'</td><td class="c-res"><span></span> – <span></span></td></tr>').join('');
-  return '<section class="pp"><h1>'+esc(headTitle())+'</h1><h2>'+esc(title)+'</h2><p class="pmeta">'+esc(sub)+'</p>'+
+  return '<section class="pp">'+(S.head.logo?'<img class="pplogo" alt="" src="'+S.head.logo+'">':'')+'<h1>'+esc(headTitle())+'</h1><h2>'+esc(title)+'</h2><p class="pmeta">'+esc(sub)+'</p>'+
     '<table><thead><tr><th>Kamp</th><th>Tid</th>'+(showPitch?'<th>Bane</th>':'')+'<th colspan="3">Hold</th><th>Kategori / runde</th><th>Resultat</th></tr></thead><tbody>'+rows+'</tbody></table></section>';
 }
 function printProgram(mode){
@@ -1536,7 +1560,7 @@ function restore(){
     S.cats=j.cats.slice(0,MAXCATS).map(c=>newCat(String(c.name||''),c));
     S.cats.forEach(c=>{ c.only=String(c.only||''); c.teams=String(c.teams||''); c.lpn=String(c.lpn||'4'); c.lp=!!c.lp; c.avoid=true; if(['group','league','knockout'].indexOf(c.format)<0) c.format='group'; });
     S.cur=Math.min(Math.max(0,j.cur|0),S.cats.length-1);
-    if(j.head&&typeof j.head.title==='string') S.head={title:j.head.title};
+    if(j.head&&typeof j.head.title==='string') S.head={title:j.head.title,logo:(typeof j.head.logo==='string'&&j.head.logo.indexOf('data:image/')===0)?j.head.logo:'',tp:!!j.head.tp};
     const c0=j.cats[0]||{};
     S.glob=Object.assign({},S.glob,j.glob||{start:c0.start,pitches:c0.pitches,pause:c0.pause});
     if(!j.glob||j.glob.home===undefined) S.glob.order='mix';
@@ -1805,17 +1829,28 @@ function openProgram(){
 function headTitle(){ return (S.head.title||'').trim()||HEAD0.title; }
 function renderHead(draw){
   $('#evEdit').hidden=draw;
-  $('#evTitle').hidden=!draw; $('#evSub').hidden=draw;
+  $('#evTitleRow').hidden=!draw; $('#evSub').hidden=draw;
   $('#evTitle').textContent=headTitle();
+  const lg=S.head.logo||'';
+  ['#clubImgE','#clubImgH'].forEach(id=>{ const im=$(id); if(lg){ im.src=lg; im.hidden=false; } else { im.hidden=true; im.removeAttribute('src'); } });
+  $('#logoDel').hidden=!lg;
 }
 function route(){
   const draw=location.hash==='#lodtraekning';
   $('#setup').hidden=draw; $('#stage').hidden=!draw;
   document.documentElement.classList.toggle('isdraw',draw);
   renderHead(draw);
-  if(!draw){ loadForm(); syncUI(); return; }
+  if(!draw){ saveRun(); loadForm(); syncUI(); return; }
   if(!S.ready){ showBlocked('Opsætningen kunne ikke hentes i denne fane.'); $('#drawCats').hidden=true; $('#stageH').textContent='Lodtrækning'; return; }
-  $('#drawCats').hidden=false; S.runs={}; S.mans={}; S.draw=null; S.filter='all'; S.pfilter='all';
+  $('#drawCats').hidden=false; S.draw=null; S.filter='all'; S.pfilter='all';
+  // Behold allerede trukne hold, hvis opsætningen af kategorien er uændret; ellers trækkes den forfra.
+  S.cats.forEach(c=>{
+    const r=catCfg(c), run=S.runs[c.id], man=S.mans[c.id];
+    if(run&&(r.errors.length||sigOf(r.cfg)!==run.sig)) delete S.runs[c.id];
+    if(man&&(r.errors.length||sigOf(r.cfg)!==sigOf(man.cfg))) delete S.mans[c.id];
+  });
+  Object.keys(S.runs).forEach(id=>{ if(!S.cats.some(c=>c.id===id)) delete S.runs[id]; });
+  Object.keys(S.mans).forEach(id=>{ if(!S.cats.some(c=>c.id===id)) delete S.mans[id]; });
   showCat();
 }
 
@@ -1832,6 +1867,7 @@ async function copyText(text,btn){
 S.cats=[newCat('Senior')];
 S.ready=restore();
 $('#evTitleIn').value=S.head.title;
+if(S.head.logo&&!S.head.tp) setLogo(S.head.logo,'');
 loadForm();
 $('#setup').addEventListener('submit',e=>{ e.preventDefault(); });
 $('#durList').addEventListener('input',e=>{ const i=e.target.closest('[data-dur]'); if(!i) return; const c=S.cats.find(x=>x.id===i.dataset.dur); if(c) c.dur=i.value; });
@@ -1849,7 +1885,86 @@ $('#bStart').addEventListener('click',e=>{
   if(!S.cats.some(c=>catCfg(c).errors.length===0)){ e.preventDefault(); syncUI(); return; }
   S.ready=true; save();
 });
-$('#evTitleIn').addEventListener('input',()=>{ S.head={title:$('#evTitleIn').value}; save(); });
+$('#evTitleIn').addEventListener('input',()=>{ S.head.title=$('#evTitleIn').value; save(); });
+$('#logoFile').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0], msg=$('#logoMsg'); e.target.value='';
+  if(!f) return;
+  if(!/^image\//.test(f.type)){ msg.textContent='Vælg en billedfil (png, jpg, svg eller webp).'; return; }
+  if(f.size>8*1024*1024){ msg.textContent='Billedet er for stort (højst 8 MB).'; return; }
+  const rd=new FileReader();
+  rd.onerror=()=>{ msg.textContent='Billedet kunne ikke læses.'; };
+  rd.onload=()=>{
+    const im=new Image();
+    im.onerror=()=>{ msg.textContent='Billedet kunne ikke åbnes.'; };
+    im.onload=()=>{
+      const mx=360, k=Math.min(1,mx/Math.max(im.naturalWidth||mx,im.naturalHeight||mx)), w=Math.max(1,Math.round((im.naturalWidth||mx)*k)), h=Math.max(1,Math.round((im.naturalHeight||mx)*k));
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h; cv.getContext('2d').drawImage(im,0,0,w,h);
+      let out; try{ out=cv.toDataURL('image/png'); }catch(err){ msg.textContent='Billedet kunne ikke bruges.'; return; }
+      setLogo(out,'');
+    };
+    im.src=rd.result;
+  };
+  rd.readAsDataURL(f);
+});
+// Fjerner den hvide baggrund rundt om et logo, så det passer til appens baggrund.
+function prepLogo(src){
+  return new Promise(res=>{
+    const im=new Image();
+    im.onerror=()=>res(src);
+    im.onload=()=>{
+      try{
+        const w=im.naturalWidth, h=im.naturalHeight; if(!w||!h){ res(src); return; }
+        const cv=document.createElement('canvas'); cv.width=w; cv.height=h; const cx=cv.getContext('2d'); cx.drawImage(im,0,0);
+        const id=cx.getImageData(0,0,w,h), d=id.data, N=w*h, seen=new Uint8Array(N), stack=[];
+        const bg=i=>{ const o=i*4; return d[o+3]<12||(d[o]>228&&d[o+1]>228&&d[o+2]>228); };
+        let edge=0, edgeBg=0;
+        const seed=i=>{ edge++; if(bg(i)){ edgeBg++; if(!seen[i]){ seen[i]=1; stack.push(i); } } };
+        for(let x=0;x<w;x++){ seed(x); seed((h-1)*w+x); }
+        for(let y=1;y<h-1;y++){ seed(y*w); seed(y*w+w-1); }
+        if(edgeBg<edge*0.6){ res(src); return; }
+        while(stack.length){
+          const i=stack.pop(), x=i%w, y=(i-x)/w;
+          if(x>0&&!seen[i-1]&&bg(i-1)){ seen[i-1]=1; stack.push(i-1); }
+          if(x<w-1&&!seen[i+1]&&bg(i+1)){ seen[i+1]=1; stack.push(i+1); }
+          if(y>0&&!seen[i-w]&&bg(i-w)){ seen[i-w]=1; stack.push(i-w); }
+          if(y<h-1&&!seen[i+w]&&bg(i+w)){ seen[i+w]=1; stack.push(i+w); }
+        }
+        for(let i=0;i<N;i++) if(seen[i]) d[i*4+3]=0;
+        cx.putImageData(id,0,0); res(cv.toDataURL('image/png'));
+      }catch(e){ res(src); }
+    };
+    im.src=src;
+  });
+}
+function setLogo(src,label){
+  const msg=$('#logoMsg');
+  prepLogo(src).then(out=>{ S.head.logo=out; S.head.tp=true; msg.textContent=label||''; save(); renderHead(location.hash==='#lodtraekning'); });
+}
+// Installér som app (PWA): knappen vises kun, når browseren tilbyder det (eller på iPhone/iPad med hjælpetekst).
+let instEv=null;
+const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+function showInstall(show){ $('#instBox').hidden=!show; }
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); instEv=e; if(!isStandalone()) showInstall(true); });
+window.addEventListener('appinstalled',()=>{ instEv=null; showInstall(false); });
+if(window.self===window.top&&location.protocol.indexOf('http')===0&&!isStandalone()&&/iphone|ipad|ipod/i.test(navigator.userAgent)) showInstall(true);
+$('#bInstall').addEventListener('click',async()=>{
+  const h=$('#instHint');
+  if(instEv){ instEv.prompt(); try{ await instEv.userChoice; }catch(e){} instEv=null; showInstall(false); return; }
+  h.textContent='Tryk på Del-knappen i Safari, og vælg "Føj til hjemmeskærm".'; h.hidden=false;
+});
+function closeLogoPick(){ $('#logoPick').hidden=true; $('#logoPickBtn').setAttribute('aria-expanded','false'); }
+$('#logoPickBtn').addEventListener('click',()=>{
+  const box=$('#logoPick');
+  if(!box.hidden){ closeLogoPick(); return; }
+  box.innerHTML=CLUBS.filter(k=>k.logo&&!k.placeholder).map(k=>'<button type="button" data-lclub="'+esc(k.id)+'"><img alt="" src="'+k.logo+'"><span>'+esc(k.name)+'</span></button>').join('');
+  box.hidden=false; $('#logoPickBtn').setAttribute('aria-expanded','true');
+});
+$('#logoPick').addEventListener('click',e=>{
+  const b=e.target.closest('[data-lclub]'); if(!b) return;
+  const k=CLUBS.find(x=>x.id===b.dataset.lclub); if(!k||!k.logo) return;
+  setLogo(k.logo,k.name); closeLogoPick();
+});
+$('#logoDel').addEventListener('click',()=>{ S.head.logo=''; S.head.tp=false; $('#logoMsg').textContent=''; save(); renderHead(location.hash==='#lodtraekning'); });
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{ cur().format=b.dataset.f; onChange(); }));
 $('#setCats').addEventListener('click',e=>{
