@@ -41,7 +41,6 @@ img{max-width:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.5}
 .app{max-width:1200px;margin:0 auto;padding-block:1.5rem 3rem;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-html:not(.isdraw) .app{max-width:calc(40rem + 2*16px)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
@@ -85,7 +84,7 @@ h2{margin:0;font:700 1.5rem/1.1 var(--font-display);letter-spacing:.02em}
 h3,h4{margin:0}
 
 .layout{display:block}
-#setup{max-width:40rem}
+#setup{max-width:none}
 .drawbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.5rem 1rem;margin-bottom:.9rem}
 a.btn{display:block;text-align:center;text-decoration:none}
 [aria-disabled="true"]{opacity:.45;pointer-events:none}
@@ -106,9 +105,18 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .glob .hint{margin:0 0 .7rem}
 .gtoggle{display:flex;align-items:center;gap:.5rem;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;text-align:left}
 .gchev{transition:transform .15s;font-size:1.1em}
+.gstate{margin-left:.3rem;padding:.12rem .55rem;border-radius:999px;font:700 .68rem/1.3 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line)}
+.gtoggle[aria-expanded="true"] .gstate{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.gtoggle[aria-expanded="true"] .gstate::before{content:"Åben"}
+.gtoggle[aria-expanded="false"] .gstate{background:transparent;color:var(--muted)}
+.gtoggle[aria-expanded="false"] .gstate::before{content:"Lukket"}
 .closed .gchev{transform:rotate(-90deg)}
 .glob.closed #globBody,.coll.closed #matchBody{display:none}
-.glob legend,.coll legend{width:100%}
+.glob legend,.coll legend,.catfs legend{width:100%}
+.catfs.closed #catBody,.fmtfs.closed #fmtBody{display:none}
+.fmtfs legend{width:100%}
+.fmtchosen{display:none}
+.fmtfs.closed .fmtchosen{display:flex}
 .glob .field{margin-top:.7rem}
 .pfilter{margin-bottom:.6rem}
 .cat[disabled]{opacity:.4;cursor:not-allowed}
@@ -178,6 +186,10 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .sp-suf{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-bottom:.6rem}
 .sp-suf label{font:600 .8rem var(--font-body)}
 .sp-suf input{width:8rem}
+.sp-suf #spN{width:4.5rem}
+.spnames{display:flex;flex-wrap:wrap;gap:.4rem;flex:1 1 100%}
+.spnames input{flex:1 1 11rem;min-width:0}
+.sp-search{width:100%;margin:.2rem 0 .5rem;box-sizing:border-box}
 .sufq{display:inline-flex;gap:.3rem}
 .sufq .chip{padding:.2rem .7rem}
 .pots .pot .tnb{background:none;border:0;color:inherit;font:inherit;font-size:.9rem;text-align:left;cursor:pointer;padding:0;border-radius:3px}
@@ -402,9 +414,10 @@ li.empty{margin:0}
     <form class="panel" id="setup" autocomplete="off">
       <h2>Opsætning</h2>
 
-      <fieldset>
-        <legend class="lbl">Kategorier</legend>
+      <fieldset class="catfs" id="catFs">
+        <legend class="lbl"><button type="button" id="catToggle" class="gtoggle" aria-expanded="true" aria-controls="catBody"><span>Kategorier</span><span class="gchev" aria-hidden="true">▾</span><span class="gstate" aria-hidden="true"></span></button></legend>
         <div class="cats" id="setCats" role="group" aria-label="Kategorier"></div>
+        <div id="catBody">
         <div class="catrow">
           <input id="newCat" type="text" maxlength="30" placeholder="Ny kategori, fx U12" aria-label="Navn på ny kategori">
           <button type="button" class="btn small" id="bAddCat">Tilføj</button>
@@ -414,16 +427,18 @@ li.empty{margin:0}
           <label for="catName">Navn på valgt kategori</label>
           <div class="catrow"><input id="catName" type="text" maxlength="30"><button type="button" class="btn ghost small" id="bDel">Fjern</button></div>
         </div>
+        </div>
       </fieldset>
 
-      <fieldset>
-        <legend class="lbl">Format</legend>
+      <fieldset class="fmtfs" id="fmtFs">
+        <legend class="lbl"><button type="button" id="fmtToggle" class="gtoggle" aria-expanded="true" aria-controls="fmtBody"><span>Format</span><span class="gchev" aria-hidden="true">▾</span><span class="gstate" aria-hidden="true"></span></button></legend>
+        <div class="cats fmtchosen" id="fmtChosen"><button type="button" class="cat" id="fmtChip" aria-pressed="true" title="Skift format"></button></div>
+        <div id="fmtBody">
         <div class="seg">
           <button type="button" data-f="group" aria-pressed="true">Gruppespil</button>
           <button type="button" data-f="league" aria-pressed="false">Liga</button>
         </div>
         <p class="hint" id="fmtHint"></p>
-      </fieldset>
 
       <div class="field" id="teamsField">
         <div class="rowhead"><label for="teams" class="lbl">Hold, ét pr. linje</label><span class="count" id="count"></span></div>
@@ -460,18 +475,19 @@ li.empty{margin:0}
         <div class="pots" id="pots2"></div>
         <div class="slotpick" id="slotPick" role="dialog" aria-label="Vælg hold" hidden>
           <p class="sp-t" id="spT"></p>
-          <div class="sp-suf" id="spSufRow"><label for="spSuf">Endelse (valgfri)</label><input id="spSuf" type="text" maxlength="20" placeholder="fx A, B, Blå" autocomplete="off"></div>
+          <div class="sp-suf" id="spSufRow"><label for="spN">Antal hold</label><input id="spN" type="number" min="1" max="16" value="1" inputmode="numeric"><div id="spNames" class="spnames"></div></div>
+          <input id="spSearch" class="sp-search" type="text" placeholder="Søg klub…" autocomplete="off" aria-label="Søg efter klub">
           <div class="chips" id="spChips"></div>
-          <div class="sp-row"><input id="spName" type="text" maxlength="40" placeholder="Eller skriv et holdnavn" autocomplete="off"><button type="button" class="btn small" id="spOk">Tilføj</button><button type="button" class="btn ghost small" id="spX">Luk</button></div>
+          <div class="sp-row" id="spRow"><input id="spName" type="text" maxlength="40" placeholder="Eller skriv et holdnavn" autocomplete="off"><button type="button" class="btn small" id="spOk">Tilføj</button><button type="button" class="btn ghost small" id="spX">Luk</button></div>
         </div>
         <div class="mini"><button type="button" class="link" id="bClearSlots">Slet alle hold</button></div>
         <p class="hint" id="slotHint"></p>
       </div>
-
-
+        </div>
+      </fieldset>
 
       <fieldset class="coll" id="matchFs">
-        <legend class="lbl"><button type="button" id="matchToggle" class="gtoggle" aria-expanded="true" aria-controls="matchBody"><span>Kampe i kategorien</span><span class="gchev" aria-hidden="true">▾</span></button></legend>
+        <legend class="lbl"><button type="button" id="matchToggle" class="gtoggle" aria-expanded="true" aria-controls="matchBody"><span>Kampe i kategorien</span><span class="gchev" aria-hidden="true">▾</span><span class="gstate" aria-hidden="true"></span></button></legend>
         <div id="matchBody">
         <label class="check" data-for="group league"><input type="checkbox" id="dbl"><span>Dobbelt runde<small>Alle møder hinanden to gange.</small></span></label>
         <div class="field"><label for="only">Spiller kun på bane (valgfri)</label><input id="only" type="text" maxlength="30" placeholder="fx 3, 1,3, 2-3 eller et banenavn" autocomplete="off"><p class="hint" id="onlyHint"></p></div>
@@ -480,7 +496,7 @@ li.empty{margin:0}
       </fieldset>
 
       <fieldset class="glob">
-        <legend class="lbl"><button type="button" id="globToggle" class="gtoggle" aria-expanded="true" aria-controls="globBody"><span>Fælles kampprogram</span><span class="gchev" aria-hidden="true">▾</span></button></legend>
+        <legend class="lbl"><button type="button" id="globToggle" class="gtoggle" aria-expanded="true" aria-controls="globBody"><span>Fælles kampprogram</span><span class="gchev" aria-hidden="true">▾</span><span class="gstate" aria-hidden="true"></span></button></legend>
         <div id="globBody">
         <p class="hint">Alle kategorier deler banerne, så tiderne lægges sammen automatisk.</p>
         <div class="grid2">
@@ -1536,21 +1552,35 @@ function openSlotPick(i,edit){
   const c=cur(); S.slot=i; S.slotCat=S.cur; S.slotEdit=!!edit;
   const pi=potInfo(catCfg(c).cfg), pot=pi?Math.floor(i/pi.size)+1:1, x=c.slots[i]?slotInfo(c.slots[i]):null;
   $('#spT').textContent=edit?'Ret holdnavn · plads '+(i+1):(pi?'Vælg hold til pulje '+pot+', plads '+(i+1):'Vælg hold nr. '+(i+1));
-  $('#spChips').hidden=!!edit; $('#spSufRow').hidden=!!edit; $('#spOk').textContent=edit?'Gem':'Tilføj';
-  $('#spChips').innerHTML=CLUBS.filter(k=>clubAllowed(k,c.name)).map(k=>'<button type="button" class="chip" data-spclub="'+esc(k.id)+'">'+lgImg(k)+esc(k.name)+'</button>').join('');
-  $('#spName').value=edit&&x?x.nm:''; $('#spSuf').value=''; $('#spName').placeholder=edit?'Holdnavn':'Eller skriv et holdnavn';
+  $('#spChips').hidden=!!edit; $('#spSufRow').hidden=!!edit; $('#spRow').hidden=false; $('#spOk').textContent=edit?'Gem':'Tilføj';
+    $('#spSearch').hidden=!!edit; $('#spSearch').value=''; renderSpChips();
+  $('#spName').value=edit&&x?x.nm:''; renderSpNames(); { const n=$('#spN'); n.max=String(Math.max(1,Math.min(16,c.slots.filter(v=>!v).length))); n.value='1'; renderSpNames(); } $('#spName').placeholder=edit?'Holdnavn':'Eller skriv et holdnavn';
   renderPots(c,catCfg(c)); const f=$('#spName'); f.focus({preventScroll:true}); if(edit) f.select();
+}
+function renderSpChips(){
+  const c=cur(), q=$('#spSearch').value.trim().toLowerCase();
+  const usedK=new Set(c.slots.filter(Boolean).map(l=>{ const k=slotInfo(l).k; return k&&k.id; }).filter(Boolean));
+  const list=CLUBS.filter(k=>clubAllowed(k,c.name)&&!usedK.has(k.id)&&(!q||k.name.toLowerCase().indexOf(q)>=0));
+  $('#spChips').innerHTML=list.length?list.map(k=>'<button type="button" class="chip" data-spclub="'+esc(k.id)+'">'+lgImg(k)+esc(k.name)+'</button>').join(''):'<span class="hint">Ingen klub fundet. Skriv holdnavnet nedenfor.</span>';
 }
 function fillSlot(i,raw){
   const c=cur(); raw=String(raw||'').trim(); if(!raw||i==null||i>=c.slots.length) return;
   if(S.slotEdit&&c.slots[i]&&raw.indexOf(';')<0){ const o=c.slots[i], ix=o.indexOf(';'); raw=raw+(ix<0?'':o.slice(ix)); }
   c.slots[i]=raw; S.slot=null; S.slotEdit=false; commitSlots();
 }
-function pickClub(i,id){
+// Klub valgt: antal hold (og evt. endelse) er valgt på forhånd; holdene lægges på de næste ledige pladser og får navne automatisk.
+function renderSpNames(){
+  const n=Math.max(1,Math.min(parseInt($('#spN').value,10)||1,16)), box=$('#spNames'), old=[...box.querySelectorAll('input')].map(x=>x.value);
+  box.innerHTML=''; if(n<2) return;
+  for(let q=0;q<n;q++){ const inp=document.createElement('input'); inp.type='text'; inp.maxLength=40; inp.className='spnm'; inp.autocomplete='off'; inp.placeholder='Efter klubnavnet, hold '+(q+1)+' (fx Blue)'; inp.value=old[q]||''; box.appendChild(inp); }
+}
+function pickClubN(i,id,count){
   const c=cur(), k=CLUBS.find(x=>x.id===id); if(!k) return;
-  const used=new Set(c.slots.filter(Boolean).map(l=>slotInfo(l).nm.toLowerCase())), suf=$('#spSuf').value.trim(); let n=1, nm=suf?k.name+' '+suf:k.name;
-  if(!suf) while(used.has(nm.toLowerCase())){ n++; nm=k.name+' '+n; }
-  fillSlot(i,nm+'; '+k.name);
+  const st=i==null?0:i, idx=[]; c.slots.forEach((x,j)=>{ if(!x&&j>=st) idx.push(j); }); c.slots.forEach((x,j)=>{ if(!x&&j<st) idx.push(j); });
+  count=Math.max(1,Math.min(count|0||1,idx.length)); if(!idx.length) return;
+  const used=new Set(c.slots.filter(Boolean).map(l=>slotInfo(l).nm.toLowerCase())); const given=[...$('#spNames').querySelectorAll('input')].map(x=>x.value.trim()); let n=2;
+  idx.slice(0,count).forEach((j,q)=>{ const base=given[q]?k.name+' '+given[q]:k.name; let nm=base; while(used.has(nm.toLowerCase())){ nm=base+' '+n; n++; } used.add(nm.toLowerCase()); c.slots[j]=nm+'; '+k.name; });
+  S.slot=null; S.slotEdit=false; commitSlots();
 }
 function nameOf(l){ const i=l.indexOf(';'); return (i<0?l:l.slice(0,i)).trim().toLowerCase(); }
 function applyPrefs(c){
@@ -1982,6 +2012,25 @@ function collapsible(fs,btn,key){
   t.addEventListener('click',()=>set(f.classList.contains('closed')));
   try{ if(localStorage.getItem(KEY+':'+key)==='0') set(false); }catch(e){}
 }
+{ // Kategorier og Format lukker af sig selv, når man går videre til de andre indstillinger.
+  const secs=[['#catFs','#catToggle'],['#fmtFs','#fmtToggle']].map(([a,b])=>({f:$(a),t:$(b)}));
+  const fmtSum=()=>{ const b=document.querySelector('.seg button[aria-pressed="true"]'); $('#fmtChip').textContent=b?b.textContent:''; };
+  $('#fmtChip').addEventListener('click',()=>set(secs[1],true));
+  const set=(x,open)=>{ if(x.f.id==='fmtFs') fmtSum(); x.f.classList.toggle('closed',!open); x.t.setAttribute('aria-expanded',String(open)); };
+  secs.forEach(x=>x.t.addEventListener('click',()=>set(x,x.f.classList.contains('closed'))));
+  const away=e=>{ if(!e.target.isConnected) return; secs.forEach(x=>{ if(!x.f.contains(e.target)&&!x.f.classList.contains('closed')) set(x,false); }); };
+  $('#setCats').addEventListener('click',e=>{ if(e.target.closest('[data-i]')) set(secs[1],true); },true); // ny kategori: vis Format og holdlisten igen
+  let ptr=false; // ved musetryk lukkes først, når klikket er færdigt, så knapperne ikke flytter sig under fingeren
+  $('#setup').addEventListener('pointerdown',()=>{ ptr=true; });
+  $('#setup').addEventListener('click',e=>{ ptr=false; away(e); });
+  document.addEventListener('pointercancel',()=>{ ptr=false; });
+  $('#setup').addEventListener('focusin',e=>{ if(!ptr) away(e); }); }
+// "Kampe i kategorien" lukker af sig selv, når man går i gang med "Fælles kampprogram".
+{ const g=document.querySelector('.glob'), m=$('#matchFs'), mt=$('#matchToggle'); let gp=false;
+  const shut=()=>{ if(!m.classList.contains('closed')){ m.classList.add('closed'); mt.setAttribute('aria-expanded','false'); } };
+  g.addEventListener('pointerdown',()=>{ gp=true; });
+  g.addEventListener('click',()=>{ gp=false; shut(); });
+  g.addEventListener('focusin',()=>{ if(!gp) shut(); }); }
 collapsible('.glob','#globToggle','globopen');
 collapsible('#matchFs','#matchToggle','matchopen');
 $('#setup').addEventListener('input',onChange);
@@ -2166,7 +2215,11 @@ $('#bClearSlots').addEventListener('click',e=>{
   if(!b.dataset.arm){ b.dataset.arm='1'; b.textContent='Tryk igen for at slette alle hold'; setTimeout(()=>{ if(b.dataset.arm){ delete b.dataset.arm; b.textContent='Slet alle hold'; } },3500); return; }
   delete b.dataset.arm; b.textContent='Slet alle hold'; c.slots=c.slots.map(()=>''); S.slot=null; commitSlots();
 });
-$('#spChips').addEventListener('click',e=>{ const b=e.target.closest('[data-spclub]'); if(b&&S.slot!=null) pickClub(S.slot,b.dataset.spclub); });
+$('#spChips').addEventListener('click',e=>{ const b=e.target.closest('[data-spclub]'); if(b&&S.slot!=null) pickClubN(S.slot,b.dataset.spclub,parseInt($('#spN').value,10)); });
+$('#spSearch').addEventListener('input',renderSpChips);
+$('#spN').addEventListener('input',renderSpNames);
+$('#spN').addEventListener('keydown',e=>{ if(e.key==='Enter') e.preventDefault(); });
+$('#spSearch').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); const b=$('#spChips [data-spclub]'); if(b&&$('#spChips').querySelectorAll('[data-spclub]').length===1) pickClubN(S.slot,b.dataset.spclub,parseInt($('#spN').value,10)); } });
 $('#spOk').addEventListener('click',()=>fillSlot(S.slot,$('#spName').value));
 $('#spX').addEventListener('click',()=>{ S.slot=null; renderPots(cur(),catCfg(cur())); });
 $('#spName').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); fillSlot(S.slot,$('#spName').value); } else if(e.key==='Escape'){ S.slot=null; renderPots(cur(),catCfg(cur())); } });
