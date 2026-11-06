@@ -152,6 +152,16 @@ a.btn{display:block;text-align:center;text-decoration:none}
 .korow label{font-weight:600;font-size:.9rem}
 #koBox .korow input{width:4.5rem}
 .opph{margin:1.2rem 0 .4rem;font:700 .95rem var(--font-display)}
+.lmx-wrap{overflow-x:auto;margin:.6rem 0 1rem;border-radius:8px;border:1px solid var(--line)}
+.lmx{border-collapse:collapse;width:100%;min-width:max-content;font-size:.82rem}
+.lmx caption{position:absolute;left:-9999px}
+.lmx th,.lmx td{border:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:middle;white-space:nowrap}
+.lmx .lmx-corner{background:var(--accent);color:var(--accent-fg);font:700 .9rem var(--font-display);text-transform:uppercase}
+.lmx .lmx-pot{color:#fff;text-align:center;font:700 .8rem var(--font-display);text-transform:uppercase;letter-spacing:.05em}
+.lmx .lmx-ha{background:var(--surface);color:var(--muted);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.lmx .lmx-team{font-weight:700;background:var(--surface)}
+.lmx-tag{display:inline-block;margin-left:.3rem;padding:0 .3rem;border-radius:3px;background:var(--line);color:var(--muted);font-size:.68rem;font-weight:700}
+.lmx td .lg,.lmx th .lg{width:1.3rem;height:1.3rem;margin:0 .35rem 0 0;vertical-align:middle}
 .opps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(19rem,1fr));gap:.4rem .9rem}
 .opps li{display:flex;flex-direction:column;gap:.1rem;padding:.45rem .6rem;border:1px solid var(--line);border-radius:6px}
 .opps .on{display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.9rem}
@@ -361,12 +371,11 @@ li.empty{margin:0}
 #fallback textarea{min-height:8rem}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#b80f2a"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"></head>
+<link rel="icon" type="image/png" href="icon-192.png"></head>
 <body>
 
 <div class="app">
   <header class="top">
-    <div class="instbox" id="instBox" hidden><button type="button" class="btn ghost small" id="bInstall">Installer app</button><p class="hint" id="instHint" hidden></p></div>
     <img class="brand" id="brandImg" alt="" width="64" height="64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjQwIDQwIDQzMiA0MzIiPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTk2IiBmaWxsPSIjYzgxMDJlIiBzdHJva2U9IiNmMmI3MDUiIHN0cm9rZS13aWR0aD0iMjIiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE2NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTQwYjBiIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1kYXNoYXJyYXk9IjIgMTYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YyYjcwNSIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTEyIDE2OEgxNjhWMjQwSDIxMiIvPjxwYXRoIGQ9Ik0xMTIgMzQ0SDE2OFYyNzJIMjEyIi8+PC9nPjxjaXJjbGUgY3g9IjMxOCIgY3k9IjI1NiIgcj0iNzYiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzE0MGIwYiIgc3Ryb2tlLXdpZHRoPSI1LjMiLz48cG9seWdvbiBwb2ludHM9IjMxOC4wLDIyNC4xIDM0OC40LDI0Ni4xIDMzNi44LDI4MS44IDI5OS4yLDI4MS44IDI4Ny42LDI0Ni4xIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjMxOC4wIiB5MT0iMjI0LjEiIHgyPSIzMTguMCIgeTI9IjE5Ni43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjMxOC4wLDE5Ni43IDMwMy41LDE4Ni4yIDMwOS4xLDE2OS4yIDMyNi45LDE2OS4yIDMzMi41LDE4Ni4yIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjM0OC40IiB5MT0iMjQ2LjEiIHgyPSIzNzQuNCIgeTI9IjIzNy43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM3NC40LDIzNy43IDM3OS45LDIyMC43IDM5Ny44LDIyMC43IDQwMy4zLDIzNy43IDM4OC44LDI0OC4yIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjMzNi44IiB5MT0iMjgxLjgiIHgyPSIzNTIuOCIgeTI9IjMwNC4wIiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM1Mi44LDMwNC4wIDM3MC43LDMwNC4wIDM3Ni4yLDMyMS4wIDM2MS44LDMzMS41IDM0Ny4zLDMyMS4wIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjI5OS4yIiB5MT0iMjgxLjgiIHgyPSIyODMuMiIgeTI9IjMwNC4wIiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjI4My4yLDMwNC4wIDI4OC43LDMyMS4wIDI3NC4yLDMzMS41IDI1OS44LDMyMS4wIDI2NS4zLDMwNC4wIiBmaWxsPSIjMTQwYjBiIi8+PGxpbmUgeDE9IjI4Ny42IiB5MT0iMjQ2LjEiIHgyPSIyNjEuNiIgeTI9IjIzNy43IiBzdHJva2U9IiMxNDBiMGIiIHN0cm9rZS13aWR0aD0iNS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjI2MS42LDIzNy43IDI0Ny4yLDI0OC4yIDIzMi43LDIzNy43IDIzOC4yLDIyMC43IDI1Ni4xLDIyMC43IiBmaWxsPSIjMTQwYjBiIi8+PC9zdmc+">
     <div class="titlerow" id="evTitleRow" hidden><img class="clubimg" id="clubImgH" alt="" hidden><h1 id="evTitle"></h1></div>
     <div id="evEdit">
@@ -445,6 +454,7 @@ li.empty{margin:0}
         <div class="field" data-for="group"><label for="groups" class="lbl">Antal grupper</label><select id="groups"><option>2</option><option selected>3</option></select><p class="hint" id="grpHint"></p></div>
         <div class="opts" data-for="group"><label class="check"><input type="checkbox" id="pots"><span>Seedede potter<small id="potHint"></small></span></label></div>
         <div class="field" id="lpnField" data-for="league"><label for="lpn" class="lbl">Antal puljer</label><select id="lpn"><option>2</option><option>3</option><option selected>4</option></select><p class="hint" id="lpnHint"></p></div>
+        <div class="field" id="lmField" data-for="league"><label for="lm" class="lbl">Kampe mod hver pulje</label><select id="lm"><option value="2" selected>2 kampe: hjemme og ude</option><option value="1">1 kamp: ét møde</option></select><p class="hint" id="lmHint"></p></div>
         <div class="opts" data-for="league"><label class="check"><input type="checkbox" id="lp"><span>Seedede puljer<small>Holdene deles i puljer efter styrke. Hvert hold møder ét hold fra hver pulje, og lodtrækningen afgør hvilke.</small></span></label></div>
         <div class="rowhead"><p class="lbl" id="potTitle">Seedning</p></div>
         <div class="pots" id="pots2"></div>
@@ -657,16 +667,21 @@ function potInfo(cfg){
 }
 function potOfTeam(cfg,team){ const pi=potInfo(cfg); return pi?Math.floor(cfg.teams.indexOf(team)/pi.size)+1:0; }
 // Liga med puljer: hvert hold møder m hold fra hver pulje (også egen pulje). Cirkulante grafer med tilfældig forskydning.
+function randPerm(n){ const a=[]; for(let i=0;i<n;i++) a.push(i); return shuffle(a); }
+function randDerange(n){ for(let t=0;t<200;t++){ const a=randPerm(n); if(a.every((v,i)=>v!==i)) return a; } const a=[]; for(let i=0;i<n;i++) a.push((i+1)%n); return a; }
+// Egen pulje: hvert hold har ét hjemmehold og ét udehold i puljen (ingen hold møder det samme hold to gange, når puljen har mindst 3 hold).
+function ownPotPerm(n){ if(n<3){ const a=[]; for(let i=0;i<n;i++) a.push((i+1)%n); return a; } for(let t=0;t<300;t++){ const a=randPerm(n); if(a.every((v,i)=>v!==i&&a[v]!==i)) return a; } const a=[]; for(let i=0;i<n;i++) a.push((i+1)%n); return a; }
+// Liga med puljer (som Champions League): hvert hold møder ét hold hjemme og ét hold ude fra hver pulje, også sin egen. Kanter er [hjemmehold, udehold].
 function buildEdges(pots,m){
-  const P=pots.length, s=pots[0].length, edges=[], idx=[]; for(let i=0;i<s;i++) idx.push(i);
+  const P=pots.length, s=pots[0].length, edges=[], flip=e=>Math.random()<.5?e:[e[1],e[0]];
   for(let a=0;a<P;a++){
+    if(m===1){ const o=randPerm(s); for(let i=0;i+1<s;i+=2) edges.push(flip([pots[a][o[i]],pots[a][o[i+1]]])); }
+    else { const w=ownPotPerm(s); for(let i=0;i<s;i++) edges.push([pots[a][i],pots[a][w[i]]]); }
     for(let b=a+1;b<P;b++){
-      const offs=shuffle(idx).slice(0,m);
-      offs.forEach(o=>{ for(let i=0;i<s;i++) edges.push([pots[a][i],pots[b][(i+o)%s]]); });
+      const sg=randPerm(s);
+      if(m===1){ for(let i=0;i<s;i++) edges.push(flip([pots[a][i],pots[b][sg[i]]])); }
+      else { const rh=randDerange(s), tu=rh.map(k=>sg[k]); for(let i=0;i<s;i++){ edges.push([pots[a][i],pots[b][sg[i]]]); edges.push([pots[b][tu[i]],pots[a][i]]); } }
     }
-    const ks=[]; for(let k=1;k<=Math.floor((s-1)/2);k++) ks.push(k);
-    shuffle(ks).slice(0,Math.floor(m/2)).forEach(k=>{ for(let i=0;i<s;i++) edges.push([pots[a][i],pots[a][(i+k)%s]]); });
-    if(m%2===1&&s%2===0) for(let i=0;i<s/2;i++) edges.push([pots[a][i],pots[a][i+s/2]]);
   }
   return edges;
 }
@@ -909,7 +924,7 @@ function catCfg(cat){
     const parts=line.split(';'), name=parts[0].trim(); if(!name) return;
     raw.push(name); const c0=parts.slice(1).join(';').trim(); if(c0){ clubs[name]=c0.toLowerCase(); labels[name]=c0; }
   });
-  const cfg={format:cat.format,teams:raw,clubs:clubs,clubLabels:labels,avoid:!!cat.avoid,groups:clampv(cat.groups,2,8,3),pots:cat.format==='group'?!!cat.pots:cat.format==='league'?!!cat.lp:false,lpots:clampv(cat.lpn,2,8,4),lper:1};
+  const cfg={format:cat.format,teams:raw,clubs:clubs,clubLabels:labels,avoid:!!cat.avoid,groups:clampv(cat.groups,2,8,3),pots:cat.format==='group'?!!cat.pots:cat.format==='league'?!!cat.lp:false,lpots:clampv(cat.lpn,2,8,4),lper:cat.lm==='1'?1:2};
   const sm=slotModeOf(cat), total=sm?cat.slots.length:raw.length; cfg.total=total;
   const errors=[], seen=new Set(), dup=new Set();
   raw.forEach(t=>{ const k=t.toLowerCase(); if(seen.has(k)) dup.add(t); seen.add(k); });
@@ -920,7 +935,7 @@ function catCfg(cat){
     const n=total, P=cfg.lpots, sz=Math.ceil(n/P);
     if(n%P) errors.push('Antal hold ('+n+') skal kunne deles ligeligt i '+P+' puljer, fx '+(P*sz)+' hold.');
     else if(sz<2) errors.push('Der skal være mindst 2 hold i hver pulje.');
-    else if(sz%2) errors.push('Hver pulje skal have et lige antal hold, så holdene i en pulje kan møde hinanden to og to (nu '+sz+' hold i hver pulje).');
+    else if(cfg.lper===1&&sz%2) errors.push('Med 1 kamp mod hver pulje skal hver pulje have et lige antal hold, så holdene i en pulje kan møde hinanden to og to (nu '+sz+' hold i hver pulje). Vælg 2 kampe, eller skift antal hold.');
   }
   if(cat.format==='group'&&total>=2&&total<cfg.groups*2) errors.push(cfg.groups+' grupper kræver mindst '+(cfg.groups*2)+' hold.');
   if(sm&&raw.length<total) errors.push('Fyld alle pladser'+(cfg.pots?' i puljerne':'')+' ('+raw.length+' af '+total+').');
@@ -943,7 +958,7 @@ const sigOf=cfg=>JSON.stringify([cfg.format,cfg.teams,cfg.format==='group'?[cfg.
 
 function storeForm(){
   const c=cur();
-  c.teams=$('#teams').value; c.groups=$('#groups').value; c.pots=$('#pots').checked; c.lp=$('#lp').checked; c.lpn=$('#lpn').value; c.avoid=true;
+  c.teams=$('#teams').value; c.groups=$('#groups').value; c.pots=$('#pots').checked; c.lp=$('#lp').checked; c.lpn=$('#lpn').value; c.lm=$('#lm').value==='1'?'1':'2'; c.avoid=true;
   ensureSlots(c);
   c.dbl=$('#dbl').checked; c.name=$('#catName').value; c.early=$('#early').checked; c.only=$('#only').value;
   S.glob={start:$('#start').value,pitches:$('#pitches').value,pnames:$('#pnames').value,pause:$('#pause').value,rest:$('#rest').value,order:$('#order').value,
@@ -951,7 +966,7 @@ function storeForm(){
 }
 function loadForm(){
   S.slot=null; const c=cur();
-  $('#teams').value=c.teams; ensureSlots(c); syncCounts(c); $('#pots').checked=!!c.pots; $('#lp').checked=!!c.lp;
+  $('#teams').value=c.teams; ensureSlots(c); syncCounts(c); $('#pots').checked=!!c.pots; $('#lp').checked=!!c.lp; $('#lm').value=c.lm==='1'?'1':'2';
   $('#dbl').checked=!!c.dbl; $('#catName').value=c.name; $('#early').checked=!!c.early; $('#only').value=c.only||'';
   const g=S.glob; $('#start').value=g.start; $('#pitches').value=g.pitches; $('#pnames').value=g.pnames||''; $('#pause').value=g.pause; $('#rest').value=g.rest; $('#order').value=g.order;
   $('#home').value=g.home; $('#homePitch').value=g.homePitch; $('#homeOnly').checked=!!g.homeOnly; $('#date').value=g.date||'';
@@ -1016,6 +1031,31 @@ function groupsHTML(d,rev){
   }
   return h+'</div>'+(d.cfg.pots?'<p class="foot">P1, P2 … viser hvilken pulje holdet kom fra.</p>':'');
 }
+const POTCOL=['#7c3aed','#0891b2','#db2777','#16a34a','#d97706','#dc2626','#2563eb','#65a30d'];
+function oppMap(d){
+  const m={}; d.steps.forEach(s=>{ m[s.team]={home:{},away:{}}; });
+  const potOf={}; d.steps.forEach(s=>{ potOf[s.team]=s.pot; });
+  (d.fixtures||[]).forEach(e=>{ m[e[0]].home[potOf[e[1]]]=e[1]; m[e[1]].away[potOf[e[0]]]=e[0]; });
+  return m;
+}
+function leagueMatrixHTML(d){
+  const pi=potInfo(d.cfg), om=oppMap(d); let h='<h3 class="opph">Hvem møder hvem</h3>';
+  for(let p=1;p<=pi.count;p++){
+    h+='<div class="lmx-wrap"><table class="lmx"><caption>Pulje '+p+'</caption><thead><tr><th class="lmx-corner" rowspan="2">Pulje '+p+'</th>';
+    const one=d.cfg.lper===1;
+    for(let q=1;q<=pi.count;q++) h+='<th colspan="'+(one?1:2)+'" class="lmx-pot" style="background:'+POTCOL[(q-1)%POTCOL.length]+'">Pulje '+q+'</th>';
+    h+='</tr><tr>';
+    for(let q=1;q<=pi.count;q++) h+=one?'<th class="lmx-ha">Modstander</th>':'<th class="lmx-ha">Hjemme</th><th class="lmx-ha">Ude</th>';
+    h+='</tr></thead><tbody>';
+    d.steps.filter(s=>s.pot===p).forEach(s=>{
+      h+='<tr><th class="lmx-team" scope="row">'+tlc(d.cfg.clubs,s.team)+'</th>';
+      for(let q=1;q<=pi.count;q++){ const a=om[s.team].home[q], b=om[s.team].away[q]; if(one){ h+='<td>'+(a?tlc(d.cfg.clubs,a)+' <span class="lmx-tag">H</span>':b?tlc(d.cfg.clubs,b)+' <span class="lmx-tag">U</span>':'–')+'</td>'; } else h+='<td>'+(a?tlc(d.cfg.clubs,a):'–')+'</td><td>'+(b?tlc(d.cfg.clubs,b):'–')+'</td>'; }
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+  return h;
+}
 function leaguePotsHTML(d,rev){
   const pi=potInfo(d.cfg); let h='<div class="groups">';
   for(let p=1;p<=pi.count;p++){
@@ -1029,11 +1069,8 @@ function leaguePotsHTML(d,rev){
     h+='</ol></article>';
   }
   h+='</div>';
-  if(d.fixtures&&rev>=d.steps.length){
-    const opp={}; d.steps.forEach(s=>{ opp[s.team]=[]; }); d.fixtures.forEach(e=>{ opp[e[0]].push(e[1]); opp[e[1]].push(e[0]); });
-    h+='<h3 class="opph">Hvem møder hvem</h3><ul class="opps">'+d.steps.map(s=>'<li><span class="on">'+tlc(d.cfg.clubs,s.team)+'</span><span class="ol">'+opp[s.team].map(esc).join(', ')+'</span></li>').join('')+'</ul>';
-  }
-  return h+'<p class="foot">Ét hold fra hver pulje, i alt '+d.cfg.lpots+' kampe pr. hold.</p>';
+  if(d.fixtures&&rev>=d.steps.length) h+=leagueMatrixHTML(d);
+  return h+'<p class="foot">'+(d.cfg.lper===1?'Hvert hold møder ét hold fra hver pulje':'Hvert hold møder ét hold hjemme og ét ude fra hver pulje')+', i alt '+(d.cfg.lper*d.cfg.lpots)+' kampe pr. hold.</p>';
 }
 function leagueHTML(d,rev){
   if(d.cfg.pots) return leaguePotsHTML(d,rev);
@@ -1099,8 +1136,8 @@ function resultText(d){
     return finalGroups(d).map((g,i)=>'Gruppe '+L(i)+'\n'+g.map((t,k)=>'  '+(k+1)+'. '+t).join('\n')).join('\n\n');
   }
   if(d.cfg.format==='league'&&d.cfg.pots){
-    const pi=potInfo(d.cfg), opp={}; d.steps.forEach(s=>{ opp[s.team]=[]; }); (d.fixtures||[]).forEach(e=>{ opp[e[0]].push(e[1]); opp[e[1]].push(e[0]); });
-    let o=''; for(let p=1;p<=pi.count;p++) o+=(o?'\n\n':'')+'Pulje '+p+'\n'+d.steps.filter(s=>s.pot===p).map((s,k)=>'  '+(k+1)+'. '+s.team+' – møder: '+opp[s.team].join(', ')).join('\n');
+    const pi=potInfo(d.cfg), om=oppMap(d); let o='';
+    for(let p=1;p<=pi.count;p++) o+=(o?'\n\n':'')+'Pulje '+p+'\n'+d.steps.filter(s=>s.pot===p).map((s,k)=>'  '+(k+1)+'. '+s.team+'\n'+Array.from({length:pi.count},(_,q)=>'     Pulje '+(q+1)+': '+(d.cfg.lper===1?(om[s.team].home[q+1]?om[s.team].home[q+1]+' (hjemme)':(om[s.team].away[q+1]||'–')+' (ude)'):'hjemme mod '+(om[s.team].home[q+1]||'–')+', ude mod '+(om[s.team].away[q+1]||'–'))).join('\n')).join('\n');
     return o;
   }
   if(d.cfg.format==='league') return d.steps.map(s=>s.pos+'. '+s.team).join('\n');
@@ -1462,7 +1499,7 @@ function teamLines(){ return $('#teams').value.split('\n').filter(l=>l.trim()); 
 function ensureSlots(c){
   if(Array.isArray(c.slots)) return;
   const lines=String(c.teams||'').split(/\r?\n/).filter(l=>l.trim()); let N=lines.length;
-  if(c.format==='league'&&c.lp){ const P=clampv(c.lpn,2,8,4); let sz=N?Math.ceil(N/P):4; if(sz%2) sz++; N=sz*P; }
+  if(c.format==='league'&&c.lp){ const P=clampv(c.lpn,2,8,4); let sz=N?Math.ceil(N/P):4; if(c.lm==='1'&&sz%2) sz++; N=sz*P; }
   else if(c.format==='group'&&c.pots&&!N) N=clampv(c.groups,2,8,3)*3;
   else if(!N) N=8;
   N=Math.min(64,Math.max(2,N)); c.slots=lines.slice(0,N).concat(new Array(Math.max(0,N-lines.length)).fill(''));
@@ -1581,6 +1618,7 @@ function syncUI(){
   const c=cur(), r=catCfg(c), f=c.format, sm=slotModeOf(c);
   $('#teamsField').hidden=true; $('#clubPick').hidden=true;
   document.querySelectorAll('[data-for]').forEach(el=>{ el.hidden=el.dataset.for.split(' ').indexOf(f)<0; });
+  $('#lmField').hidden=!(f==='league'&&$('#lp').checked);
   document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===f));
   $('#fmtHint').textContent=HINT[f];
   const n=r.cfg.teams.length, G=r.cfg.groups;
@@ -1614,7 +1652,7 @@ function restore(){
     const j=JSON.parse(localStorage.getItem(KEY)||'null');
     if(!j||!Array.isArray(j.cats)||!j.cats.length) return false;
     S.cats=j.cats.slice(0,MAXCATS).map(c=>newCat(String(c.name||''),c));
-    S.cats.forEach(c=>{ c.only=String(c.only||''); c.teams=String(c.teams||''); c.lpn=String(c.lpn||'4'); c.lp=!!c.lp; c.avoid=true; if(['group','league','knockout'].indexOf(c.format)<0) c.format='group'; });
+    S.cats.forEach(c=>{ c.only=String(c.only||''); c.teams=String(c.teams||''); c.lpn=String(c.lpn||'4'); c.lm=c.lm==='1'?'1':'2'; c.lp=!!c.lp; c.avoid=true; if(['group','league','knockout'].indexOf(c.format)<0) c.format='group'; });
     S.cur=Math.min(Math.max(0,j.cur|0),S.cats.length-1);
     if(j.head&&typeof j.head.title==='string') S.head={title:j.head.title,logo:(typeof j.head.logo==='string'&&j.head.logo.indexOf('data:image/')===0)?j.head.logo:'',tp:!!j.head.tp};
     const c0=j.cats[0]||{};
@@ -1863,7 +1901,8 @@ function manOff(){ delete S.mans[cur().id]; startDraw(); }
 /* ---------- kategorier på lodtrækningssiden ---------- */
 function renderDrawCats(){
   $('#drawCats').innerHTML=S.cats.map((c,i)=>'<button type="button" class="cat" data-i="'+i+'" aria-pressed="'+(S.tab==='draw'&&i===S.cur)+'">'+esc(catLabel(c))+'</button>').join('');
-  $('#progBar').innerHTML='<button type="button" class="cat prog" data-prog="1" aria-pressed="'+(S.tab==='prog')+'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Kampprogram</button>';
+  { const pr=S.tab==='prog', cal='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>', back='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+    $('#progBar').innerHTML='<button type="button" class="cat prog" data-prog="1" aria-pressed="'+pr+'">'+(pr?back+'Tilbage til '+esc(catLabel(S.cats[S.cur])):cal+'Kampprogram')+'</button>'; }
 }
 function saveRun(){
   if(S.draw) S.runs[cur().id]={draw:S.draw,revealed:S.revealed,sig:S.sig};
@@ -2006,18 +2045,11 @@ function setLogo(src,label){
   const msg=$('#logoMsg');
   prepLogo(src).then(out=>{ S.head.logo=out; S.head.tp=true; msg.textContent=label||''; save(); renderHead(location.hash==='#lodtraekning'); });
 }
-// Installér som app (PWA): knappen vises kun, når browseren tilbyder det (eller på iPhone/iPad med hjælpetekst).
-let instEv=null;
-const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
-function showInstall(show){ $('#instBox').hidden=!show; }
-window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); instEv=e; if(!isStandalone()) showInstall(true); });
-window.addEventListener('appinstalled',()=>{ instEv=null; showInstall(false); });
-if(window.self===window.top&&location.protocol.indexOf('http')===0&&!isStandalone()&&/iphone|ipad|ipod/i.test(navigator.userAgent)) showInstall(true);
-$('#bInstall').addEventListener('click',async()=>{
-  const h=$('#instHint');
-  if(instEv){ instEv.prompt(); try{ await instEv.userChoice; }catch(e){} instEv=null; showInstall(false); return; }
-  h.textContent='Tryk på Del-knappen i Safari, og vælg "Føj til hjemmeskærm".'; h.hidden=false;
-});
+// Appen kører som almindelig hjemmeside: fjern evt. gammel app-cache/service worker fra tidligere installation.
+try{ if(location.protocol.indexOf('http')===0){
+  if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations) navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
+  if(window.caches&&caches.keys) caches.keys().then(ks=>ks.forEach(k=>caches.delete(k))).catch(()=>{});
+} }catch(e){}
 function closeLogoPick(){ $('#logoPick').hidden=true; $('#logoPickBtn').setAttribute('aria-expanded','false'); }
 $('#logoPickBtn').addEventListener('click',()=>{
   const box=$('#logoPick');
@@ -2151,7 +2183,7 @@ $('#clubAskX').addEventListener('click',()=>{ S.ask=null; renderClubPick(cur(),c
 $('#bClear').addEventListener('click',()=>{ cur().pref={}; $('#teams').value=''; onChange(); $('#teams').focus(); });
 [$('#drawCats'),$('#progBar')].forEach(box=>box.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
-  if(b.dataset.prog) openProgram(); else if(b.dataset.i!==undefined) switchDrawCat(parseInt(b.dataset.i,10));
+  if(b.dataset.prog){ if(S.tab==='prog') switchDrawCat(S.cur); else openProgram(); } else if(b.dataset.i!==undefined) switchDrawCat(parseInt(b.dataset.i,10));
 }));
 $('#bManual').addEventListener('click',startManual);
 $('#bUndo').addEventListener('click',manUndo);
@@ -2194,5 +2226,5 @@ syncUI();
 route();
 })();
 </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script></body>
+</body>
 </html>
