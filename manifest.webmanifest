@@ -1,7 +1,7 @@
 {
-  "name": "Turneringslodtrækning",
-  "short_name": "Lodtrækning",
-  "description": "Lodtrækning og kampprogram til turneringer",
+  "name": "Lodtræk",
+  "short_name": "Lodtræk",
+  "description": "Lodtrækning til turneringer: grupper, liga og slutspil",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

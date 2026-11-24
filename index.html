@@ -10,7 +10,7 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 img{max-width:100%}
 [hidden]{display:none!important}
 </style>
-<title>Turneringslodtrækning</title>
+<title>Lodtræk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
@@ -1005,7 +1005,7 @@ const isWomenCat=name=>/women|kvinde|dame/i.test(String(name||''));
 const clubAllowed=(k,catName)=>!k.womenOnly||isWomenCat(catName);
 const lgImg=(k,cls)=>k&&k.logo?'<img class="'+(cls||'lg')+'" src="'+k.logo+'" alt="">':'';
 const tlc=(clubs,team)=>lgImg(clubs&&clubs[team]?clubOf(clubs[team]):null)+esc(team);
-const HEAD0={title:'Turneringslodtrækning'};
+const HEAD0={title:'Lodtræk'};
 const S={head:Object.assign({},HEAD0),cats:[],cur:0,glob:{start:'09:00',dur:'15',pitches:'2',pnames:'',pause:'5',rest:'10',order:'mix',home:'',homePitch:'1',homeOnly:false,date:''},filter:'all',pfilter:'all',draw:null,revealed:0,last:-1,busy:false,token:0,ready:false,sig:'',tab:'draw',programText:'',runs:{},mans:{}};
 
 const uid=()=>'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
