@@ -2563,6 +2563,7 @@ route();
     window.__vpick=function(i){ if(!V.last) return; V.pick=(i===V.last.cur)?-1:i; apply(V.last); };
     async function apply(p){
       V.last=p; V.runs=p.runs||[];
+      if(p.ll&&p.ll!==V.ll){ V.ll=p.ll; try{ const L=await (await sj(base+'/logos.json','GET')).json(); if(L&&typeof L==='object') Object.keys(L).forEach(id=>{ const k=CLUBS.find(x=>x.id===id); if(k&&typeof L[id]==='string'&&L[id].indexOf('data:image/')===0) applyOv(k,L[id]); }); }catch(e){} }
       if(p.cur!==V.pc){ V.pc=p.cur; V.pick=-1; }
       if(V.pick>=0&&!V.runs[V.pick]) V.pick=-1;
       if(V.pick>=0){
@@ -2602,13 +2603,14 @@ route();
   if(!CAN_PRINT) return;
   const bl=$('#bLive'), panel=$('#livePanel'); bl.hidden=false;
   const msg=t=>{ $('#liveMsg').textContent=t||''; };
-  let db='', room='', on=false, timer=null, lastKey='', inflight=false, lastHead='';
+  let db='', room='', on=false, timer=null, lastKey='', inflight=false, lastHead='', lastLl='';
+  const llOf=()=>Object.keys(OV).sort().map(id=>id+':'+String(OV[id]).length).join(',');
   try{ db=localStorage.getItem(DBKEY)||''; const l=JSON.parse(localStorage.getItem(LKEY2)||'null'); if(l&&l.id){ room=l.id; on=!!l.on; } }catch(e){}
   if(!FBRE.test(db)) db='';
   const rid=()=>{ const a='abcdefghijkmnpqrstuvwxyz23456789'; let r=''; const u=new Uint8Array(12); (crypto.getRandomValues?crypto.getRandomValues(u):u.forEach((_,i)=>u[i]=Math.random()*256)); for(let i=0;i<12;i++) r+=a[u[i]%a.length]; return r; };
   const link=()=>location.origin+location.pathname+'?live='+room+'&db='+encodeURIComponent(db);
   const runsOut=()=>S.cats.map((c,i)=>{ if(i===S.cur) return null; const r=S.runs[c.id]; return (r&&r.draw&&r.draw.steps&&r.revealed>=r.draw.steps.length)?{draw:r.draw,revealed:r.revealed,sig:r.sig}:null; });
-  const key=()=>[runsOut().map(r=>r?r.sig:'-').join(','),S.cur,S.revealed,S.sig,S.draw?1:0,headTitle(),(S.head.logo||'').length,S.cats.map(c=>catLabel(c)).join('|')].join('~');
+  const key=()=>[llOf(),runsOut().map(r=>r?r.sig:'-').join(','),S.cur,S.revealed,S.sig,S.draw?1:0,headTitle(),(S.head.logo||'').length,S.cats.map(c=>catLabel(c)).join('|')].join('~');
   function ui(){
     $('#liveSetup').hidden=!!db&&on; $('#liveOn').hidden=!(db&&on);
     if(db&&on) $('#liveLink').value=link();
@@ -2621,14 +2623,15 @@ route();
       const k=key(); lastKey=k;
       const hk=(S.head.logo||'');
       if(hk!==lastHead){ await sj(db+'/rooms/'+room+'/head.json','PUT',JSON.stringify({logo:hk})); lastHead=hk; }
-      const p={title:headTitle(),cats:S.cats.map(c=>catLabel(c)),cur:S.cur,sig:S.sig,revealed:S.revealed,draw:S.draw,hl:hk.length,runs:runsOut()};
+      const ll=llOf(); if(ll&&ll!==lastLl){ await sj(db+'/rooms/'+room+'/logos.json','PUT',JSON.stringify(OV)); lastLl=ll; }
+      const p={ll:ll,title:headTitle(),cats:S.cats.map(c=>catLabel(c)),cur:S.cur,sig:S.sig,revealed:S.revealed,draw:S.draw,hl:hk.length,runs:runsOut()};
       const r=await sj(db+'/rooms/'+room+'/state.json','PUT',JSON.stringify({t:Date.now(),j:JSON.stringify(p)}));
       if(!r.ok) throw new Error('http '+r.status);
       msg('Live er tændt. Seneste opdatering sendt '+new Date().toLocaleTimeString('da-DK')+'.');
     }catch(e){ lastKey=''; msg('Kunne ikke sende til Firebase. Tjek adressen og reglerne i databasen.'); }
     inflight=false;
   }
-  function start(){ if(!db) return; if(!room) room=rid(); on=true; try{ localStorage.setItem(LKEY2,JSON.stringify({id:room,on:true})); }catch(e){} lastKey=''; lastHead=null; ui(); push(); clearInterval(timer); timer=setInterval(()=>{ if(on&&key()!==lastKey) push(); },700); }
+  function start(){ if(!db) return; if(!room) room=rid(); on=true; try{ localStorage.setItem(LKEY2,JSON.stringify({id:room,on:true})); }catch(e){} lastKey=''; lastHead=null; lastLl=''; ui(); push(); clearInterval(timer); timer=setInterval(()=>{ if(on&&key()!==lastKey) push(); },700); }
   async function stop(){ on=false; clearInterval(timer); try{ localStorage.setItem(LKEY2,JSON.stringify({id:room,on:false})); }catch(e){} try{ await sj(db+'/rooms/'+room+'.json','DELETE'); }catch(e){} room=''; try{ localStorage.removeItem(LKEY2); }catch(e){} msg('Live er stoppet.'); ui(); }
   bl.addEventListener('click',()=>{ panel.hidden=!panel.hidden; ui(); });
   $('#fbSave').addEventListener('click',()=>{
