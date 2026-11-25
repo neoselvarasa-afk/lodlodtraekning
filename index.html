@@ -595,6 +595,7 @@ li.empty{margin:0}
       <div class="cats drawcats" id="drawCats" role="group" aria-label="Kategorier og kampprogram"></div>
       <div class="stage-head"><h2 id="stageH">Lodtrækning</h2></div>
       <p class="livestat" id="liveStat" hidden role="status"></p>
+      <div class="ctrls" id="vShare" hidden><button type="button" class="btn ghost" id="vCopy">Kopiér</button><button type="button" class="btn ghost" id="vCopyAll">Kopiér alle</button><button type="button" class="btn ghost" id="vShareBtn" hidden>Del</button><button type="button" class="btn ghost" id="vPrint" hidden>Udskriv</button></div>
       <p class="notice" id="notice" hidden></p>
 
       <div id="viewDraw">
@@ -2540,6 +2541,25 @@ route();
       box.innerHTML=S.cats.map((c,i)=>{ const live=i===V.last.cur, ok=live||!!V.runs[i], shown=V.pick>=0?i===V.pick:live;
         return '<button type="button" class="cat" data-i="'+i+'"'+(ok?'':' disabled')+' aria-pressed="'+shown+'">'+esc(catLabel(c))+'</button>'; }).join('');
     }
+    const fin=d=>!!d&&d.steps&&d.steps.length>0;
+    function shown(){ // {i,d} for den viste kategori, hvis den er færdig
+      const p=V.last; if(!p) return null; const i=V.pick>=0?V.pick:p.cur;
+      if(V.pick<0){ return (p.draw&&S.revealed>=p.draw.steps.length)?{i:i,d:p.draw}:null; }
+      const r=V.runs[i]; return r&&fin(r.draw)?{i:i,d:r.draw}:null;
+    }
+    function allTxt(){
+      const p=V.last, out=[]; if(!p) return '';
+      S.cats.forEach((c,i)=>{ let d=null; if(i===p.cur){ if(p.draw&&p.revealed>=p.draw.steps.length) d=p.draw; } else if(V.runs[i]&&fin(V.runs[i].draw)) d=V.runs[i].draw; if(d) out.push(catLabel(c)+'\n'+resultText(d)); });
+      return headTitle()+'\n\n'+out.join('\n\n');
+    }
+    function oneTxt(x){ return headTitle()+'\n'+catLabel(S.cats[x.i])+' – lodtrækning\n\n'+resultText(x.d); }
+    function vbar(){ const x=shown(), bar=$('#vShare'); bar.hidden=!x; if(!x) return; $('#vCopyAll').hidden=S.cats.length<2; }
+    $('#vCopy').addEventListener('click',e=>{ const x=shown(); if(x) copyRich(resultHTML(x.d,catLabel(S.cats[x.i])),oneTxt(x),e.currentTarget); });
+    $('#vCopyAll').addEventListener('click',e=>{ const t=allTxt(); if(t) copyText(t,e.currentTarget); });
+    if(CAN_PRINT){ $('#vPrint').hidden=false; $('#vPrint').addEventListener('click',()=>{ const x=shown(); if(!x) return;
+      $('#printArea').innerHTML='<section class="pp"><div class="ppres">'+resultHTML(x.d,catLabel(S.cats[x.i]))+'</div></section>'; document.body.classList.add('printing');
+      window.addEventListener('afterprint',()=>{ document.body.classList.remove('printing'); },{once:true}); window.print(); }); }
+    if(navigator.share){ $('#vShareBtn').hidden=false; $('#vShareBtn').addEventListener('click',()=>{ const x=shown(); if(!x) return; navigator.share({title:headTitle(),text:oneTxt(x)}).catch(()=>{}); }); }
     window.__vpick=function(i){ if(!V.last) return; V.pick=(i===V.last.cur)?-1:i; apply(V.last); };
     async function apply(p){
       V.last=p; V.runs=p.runs||[];
@@ -2549,7 +2569,7 @@ route();
         S.head.title=p.title||HEAD0.title;
         S.cats=(p.cats||[]).map(n=>newCat(String(n))); S.cur=V.pick; S.vcur=-1;
         const r=V.runs[V.pick]; S.token++; S.busy=false; S.draw=r.draw; S.sig=r.sig||''; S.revealed=r.revealed; S.last=-1; setTab('draw'); renderHead(true); renderAll(); vtabs();
-        stat('Du ser '+catLabel(S.cats[V.pick])+'. Tryk på den kategori, der trækkes nu, for at følge live.',false); return;
+        stat('Du ser '+catLabel(S.cats[V.pick])+'. Tryk på den kategori, der trækkes nu, for at følge live.',false); vbar(); return;
       }
       if(p.hl!==hl){ hl=p.hl; try{ const h=await (await sj(base+'/head.json','GET')).json(); S.head.logo=(h&&typeof h.logo==='string'&&h.logo.indexOf('data:image/')===0)?h.logo:''; }catch(e){} }
       S.head.title=p.title||HEAD0.title;
@@ -2565,7 +2585,7 @@ route();
         S.token++; S.busy=false; S.draw=p.draw||null; S.sig=p.sig||''; S.revealed=p.draw?p.revealed:0; S.last=-1; setTab('draw'); renderAll();
       }
       stat(p.draw?(S.revealed>=p.draw.steps.length?'Lodtrækningen er færdig':'Live lodtrækning'):'Venter på at lodtrækningen starter …',!!p.draw&&S.revealed<p.draw.steps.length);
-      vtabs();
+      vtabs(); vbar();
     }
     async function tick(){
       if(working) return; working=true;
