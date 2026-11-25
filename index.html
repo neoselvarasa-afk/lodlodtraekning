@@ -2330,6 +2330,7 @@ $('#clubAskX').addEventListener('click',()=>{ S.ask=null; renderClubPick(cur(),c
 $('#bClear').addEventListener('click',()=>{ cur().pref={}; $('#teams').value=''; onChange(); $('#teams').focus(); });
 [$('#drawCats'),$('#progBar')].forEach(box=>box.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
+  if(VIEWQ.on){ if(b.dataset.i!==undefined&&window.__vpick) window.__vpick(parseInt(b.dataset.i,10)); return; }
   if(b.dataset.prog){ if(S.tab==='prog') switchDrawCat(S.cur); else openProgram(); } else if(b.dataset.i!==undefined) switchDrawCat(parseInt(b.dataset.i,10));
 }));
 $('#bManual').addEventListener('click',startManual);
@@ -2528,12 +2529,28 @@ route();
   if(VIEWQ.on){
     document.documentElement.classList.add('isview','isdraw');
     $('#setup').hidden=true; $('#stage').hidden=false; $('#drawCats').hidden=true; $('#progBar').hidden=true;
+    const V={pick:-1,pc:-1,runs:[],last:null};
     const st=$('#liveStat'); st.hidden=false;
     const base=VIEWQ.db+'/rooms/'+VIEWQ.room;
     let lastT=null, hl=-1, working=false, had=false;
     const stat=(t,on)=>{ st.textContent=t; st.className='livestat'+(on?' on':''); };
     stat('Venter på at lodtrækningen starter …',false);
+    function vtabs(){
+      const n=S.cats.length, box=$('#drawCats'); box.hidden=n<2;
+      box.innerHTML=S.cats.map((c,i)=>{ const live=i===V.last.cur, ok=live||!!V.runs[i], shown=V.pick>=0?i===V.pick:live;
+        return '<button type="button" class="cat" data-i="'+i+'"'+(ok?'':' disabled')+' aria-pressed="'+shown+'">'+esc(catLabel(c))+'</button>'; }).join('');
+    }
+    window.__vpick=function(i){ if(!V.last) return; V.pick=(i===V.last.cur)?-1:i; apply(V.last); };
     async function apply(p){
+      V.last=p; V.runs=p.runs||[];
+      if(p.cur!==V.pc){ V.pc=p.cur; V.pick=-1; }
+      if(V.pick>=0&&!V.runs[V.pick]) V.pick=-1;
+      if(V.pick>=0){
+        S.head.title=p.title||HEAD0.title;
+        S.cats=(p.cats||[]).map(n=>newCat(String(n))); S.cur=V.pick; S.vcur=-1;
+        const r=V.runs[V.pick]; S.token++; S.busy=false; S.draw=r.draw; S.sig=r.sig||''; S.revealed=r.revealed; S.last=-1; setTab('draw'); renderHead(true); renderAll(); vtabs();
+        stat('Du ser '+catLabel(S.cats[V.pick])+'. Tryk på den kategori, der trækkes nu, for at følge live.',false); return;
+      }
       if(p.hl!==hl){ hl=p.hl; try{ const h=await (await sj(base+'/head.json','GET')).json(); S.head.logo=(h&&typeof h.logo==='string'&&h.logo.indexOf('data:image/')===0)?h.logo:''; }catch(e){} }
       S.head.title=p.title||HEAD0.title;
       S.cats=(p.cats||[]).map(n=>newCat(String(n))); if(!S.cats.length) S.cats=[newCat('Senior')];
@@ -2548,6 +2565,7 @@ route();
         S.token++; S.busy=false; S.draw=p.draw||null; S.sig=p.sig||''; S.revealed=p.draw?p.revealed:0; S.last=-1; setTab('draw'); renderAll();
       }
       stat(p.draw?(S.revealed>=p.draw.steps.length?'Lodtrækningen er færdig':'Live lodtrækning'):'Venter på at lodtrækningen starter …',!!p.draw&&S.revealed<p.draw.steps.length);
+      vtabs();
     }
     async function tick(){
       if(working) return; working=true;
@@ -2569,7 +2587,8 @@ route();
   if(!FBRE.test(db)) db='';
   const rid=()=>{ const a='abcdefghijkmnpqrstuvwxyz23456789'; let r=''; const u=new Uint8Array(12); (crypto.getRandomValues?crypto.getRandomValues(u):u.forEach((_,i)=>u[i]=Math.random()*256)); for(let i=0;i<12;i++) r+=a[u[i]%a.length]; return r; };
   const link=()=>location.origin+location.pathname+'?live='+room+'&db='+encodeURIComponent(db);
-  const key=()=>[S.cur,S.revealed,S.sig,S.draw?1:0,headTitle(),(S.head.logo||'').length,S.cats.map(c=>catLabel(c)).join('|')].join('~');
+  const runsOut=()=>S.cats.map((c,i)=>{ if(i===S.cur) return null; const r=S.runs[c.id]; return (r&&r.draw&&r.draw.steps&&r.revealed>=r.draw.steps.length)?{draw:r.draw,revealed:r.revealed,sig:r.sig}:null; });
+  const key=()=>[runsOut().map(r=>r?r.sig:'-').join(','),S.cur,S.revealed,S.sig,S.draw?1:0,headTitle(),(S.head.logo||'').length,S.cats.map(c=>catLabel(c)).join('|')].join('~');
   function ui(){
     $('#liveSetup').hidden=!!db&&on; $('#liveOn').hidden=!(db&&on);
     if(db&&on) $('#liveLink').value=link();
@@ -2582,7 +2601,7 @@ route();
       const k=key(); lastKey=k;
       const hk=(S.head.logo||'');
       if(hk!==lastHead){ await sj(db+'/rooms/'+room+'/head.json','PUT',JSON.stringify({logo:hk})); lastHead=hk; }
-      const p={title:headTitle(),cats:S.cats.map(c=>catLabel(c)),cur:S.cur,sig:S.sig,revealed:S.revealed,draw:S.draw,hl:hk.length};
+      const p={title:headTitle(),cats:S.cats.map(c=>catLabel(c)),cur:S.cur,sig:S.sig,revealed:S.revealed,draw:S.draw,hl:hk.length,runs:runsOut()};
       const r=await sj(db+'/rooms/'+room+'/state.json','PUT',JSON.stringify({t:Date.now(),j:JSON.stringify(p)}));
       if(!r.ok) throw new Error('http '+r.status);
       msg('Live er tændt. Seneste opdatering sendt '+new Date().toLocaleTimeString('da-DK')+'.');
