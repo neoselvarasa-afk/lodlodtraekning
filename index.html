@@ -2024,6 +2024,7 @@ function manOff(){ delete S.mans[cur().id]; startDraw(); }
 
 /* ---------- kategorier på lodtrækningssiden ---------- */
 function renderDrawCats(){
+  if(VIEWQ.on){ if(window.__vtabs) window.__vtabs(); return; }
   $('#drawCats').innerHTML=S.cats.map((c,i)=>'<button type="button" class="cat" data-i="'+i+'" aria-pressed="'+(S.tab==='draw'&&i===S.cur)+'">'+esc(catLabel(c))+'</button>').join('');
   { const pr=S.tab==='prog', cal='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>', back='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
     $('#progBar').innerHTML='<button type="button" class="cat prog" data-prog="1" aria-pressed="'+pr+'">'+(pr?back+'Tilbage til '+esc(catLabel(S.cats[S.cur])):cal+'Kampprogram')+'</button>'; }
@@ -2536,9 +2537,10 @@ route();
     let lastT=null, hl=-1, working=false, had=false;
     const stat=(t,on)=>{ st.textContent=t; st.className='livestat'+(on?' on':''); };
     stat('Venter på at lodtrækningen starter …',false);
+    const busyDraw=p=>!!(p&&p.draw&&p.draw.steps&&p.revealed>0&&p.revealed<p.draw.steps.length);
     function vtabs(){
       const n=S.cats.length, box=$('#drawCats'); box.hidden=n<2;
-      box.innerHTML=S.cats.map((c,i)=>{ const live=i===V.last.cur, ok=live||!!V.runs[i], shown=V.pick>=0?i===V.pick:live;
+      box.innerHTML=S.cats.map((c,i)=>{ const live=i===V.last.cur, ok=live||(!!V.runs[i]&&!busyDraw(V.last)), shown=V.pick>=0?i===V.pick:live;
         return '<button type="button" class="cat" data-i="'+i+'"'+(ok?'':' disabled')+' aria-pressed="'+shown+'">'+esc(catLabel(c))+'</button>'; }).join('');
     }
     const fin=d=>!!d&&d.steps&&d.steps.length>0;
@@ -2560,11 +2562,12 @@ route();
       $('#printArea').innerHTML='<section class="pp"><div class="ppres">'+resultHTML(x.d,catLabel(S.cats[x.i]))+'</div></section>'; document.body.classList.add('printing');
       window.addEventListener('afterprint',()=>{ document.body.classList.remove('printing'); },{once:true}); window.print(); }); }
     if(navigator.share){ $('#vShareBtn').hidden=false; $('#vShareBtn').addEventListener('click',()=>{ const x=shown(); if(!x) return; navigator.share({title:headTitle(),text:oneTxt(x)}).catch(()=>{}); }); }
-    window.__vpick=function(i){ if(!V.last) return; V.pick=(i===V.last.cur)?-1:i; apply(V.last); };
+    window.__vtabs=function(){ if(V.last) vtabs(); };
+    window.__vpick=function(i){ if(!V.last||busyDraw(V.last)) return; V.pick=(i===V.last.cur)?-1:i; apply(V.last); };
     async function apply(p){
       V.last=p; V.runs=p.runs||[];
       if(p.ll&&p.ll!==V.ll){ V.ll=p.ll; try{ const L=await (await sj(base+'/logos.json','GET')).json(); if(L&&typeof L==='object') Object.keys(L).forEach(id=>{ const k=CLUBS.find(x=>x.id===id); if(k&&typeof L[id]==='string'&&L[id].indexOf('data:image/')===0) applyOv(k,L[id]); }); }catch(e){} }
-      if(p.cur!==V.pc){ V.pc=p.cur; V.pick=-1; }
+      if(p.cur!==V.pc||busyDraw(p)){ V.pc=p.cur; V.pick=-1; }
       if(V.pick>=0&&!V.runs[V.pick]) V.pick=-1;
       if(V.pick>=0){
         S.head.title=p.title||HEAD0.title;
